@@ -1,0 +1,6 @@
+DEFAULTS: &DEFAULTS
+  password_digest: <%= BCrypt::Password.create("It's m3?") %>
+
+james:
+  <<: *DEFAULTS
+  email: james@example.com

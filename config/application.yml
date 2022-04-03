@@ -1,0 +1,5 @@
+development:
+  DATABASE_URL: postgres://postgres:postgres@localhost:5432/ezapp_development
+
+test:
+  DATABASE_URL: postgres://postgres:postgres@localhost:5432/ezapp_test

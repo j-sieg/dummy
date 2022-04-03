@@ -11,7 +11,7 @@ development:
 
 test:
   <<: *default
-  database: ezapp_test
+  DATABASE_URL: <%= ENV["DATABASE_URL"] %>
 
 production:
   <<: *default
