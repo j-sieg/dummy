@@ -3,4 +3,18 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+
+  scope module: "users" do
+    get "/sign_up", to: "registrations#new"
+    post "/sign_up", to: "registrations#create"
+
+    get "/login", to: "sessions#new"
+    post "/login", to: "sessions#create"
+    delete "/logout", to: "sessions#destroy"
+    delete "/sessions/:id", to: "sessions#destroy", as: :destroy_user_session
+
+    get "/settings", to: "settings#index"
+  end
+
+  root "root#index"
 end

@@ -1,0 +1,24 @@
+<h1> Sign up </h1>
+<%= form_with(model: user, url: sign_up_path, method: :post) do |form| %>
+  <div>
+    <%= form.label :email %>
+    <%= form.email_field :email %>
+    <%= field_errors(form.object, :email) %>
+  </div>
+
+  <div>
+    <%= form.label :password %>
+    <%= form.password_field :password %>
+    <%= field_errors(form.object, :password) %>
+  </div>
+
+  <div>
+    <%= form.label :password_confirmation %>
+    <%= form.password_field :password_confirmation %>
+    <%= field_errors(form.object, :password_confirmation) %>
+  </div>
+
+  <%= form.submit "Sign up" %>
+<% end %>
+
+<p>Already have an account? <%= link_to "Log in", login_url %></p>

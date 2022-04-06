@@ -1,0 +1,23 @@
+<h1>Here lies <%= current_user.email %>'s settings</h1>
+
+<% if current_user %>
+  <%= form_with(url: logout_path, method: :delete) do |form| %>
+    <%= form.submit "Log out" %>
+  <% end %>
+<% end %>
+
+<h2>All your active sessions</h2>
+<p>BTW, logging out of your account logs your out of all your sessions.</p>
+<ul>
+  <% active_sessions.each do |user_token| %>
+    <li id="<%= dom_id(user_token) %>">
+      <%= user_token.created_at %>
+      <%= form_with(model: user_token, url: destroy_user_session_path(user_token), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
+        <% if (current_session = user_token.token == session[:user_token]) %>
+          <strong>This is your current session</strong>
+        <% end %>
+        <%= form.submit "Delete" %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
