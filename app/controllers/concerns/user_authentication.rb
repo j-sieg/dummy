@@ -2,7 +2,7 @@ module UserAuthentication
   extend ActiveSupport::Concern
 
   included do
-    helper_method :current_user
+    helper_method :current_user, :user_signed_in?
     before_action :authenticate_user
   end
 
@@ -27,6 +27,10 @@ module UserAuthentication
     if @current_user
       redirect_to root_url, alert: "You are already logged in.", status: :see_other
     end
+  end
+
+  def user_signed_in?
+    @current_user.present?
   end
 
   def store_requested_url!

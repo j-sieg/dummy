@@ -10,6 +10,16 @@
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="nav mx-auto" style="width: fit-content;">
+      <% if user_signed_in? %>
+        <%= link_to "Home", root_path, class: "nav-link" %>
+        <%= button_to "Log out", logout_path, class: "border-0 nav-link bg-white" %>
+      <% else %>
+        <%= link_to "Log in", login_path, class: "nav-link" %>
+      <% end %>
+    </nav>
+    <main class="container">
+      <%= yield %>
+    </main>
   </body>
 </html>
