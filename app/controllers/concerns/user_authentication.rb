@@ -13,7 +13,9 @@ module UserAuthentication
   end
 
   def authenticate_user
-    @current_user ||= User.find_by_session_token(session[:user_token])
+    if token = session[:user_token]
+      @current_user = User.find_by_session_token(token)
+    end
   end
 
   def require_user_authentication!
