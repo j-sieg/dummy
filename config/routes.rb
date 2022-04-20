@@ -16,5 +16,14 @@ Rails.application.routes.draw do
     get "/settings", to: "settings#index"
   end
 
+  namespace :api do
+    namespace :v1 do
+      scope module: "users" do
+        post "/login", to: "sessions#new"
+        post "/logout", to: "sessions#destroy"
+      end
+    end
+  end
+
   root "root#index"
 end
