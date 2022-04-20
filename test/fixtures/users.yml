@@ -4,3 +4,7 @@ DEFAULTS: &DEFAULTS
 james:
   <<: *DEFAULTS
   email: james@example.com
+
+josh:
+  <<: *DEFAULTS
+  email: josh@example.com

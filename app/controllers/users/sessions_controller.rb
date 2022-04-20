@@ -10,7 +10,7 @@ module Users
       if (user = User.find_by(email: params[:email])&.authenticate(params[:password]))
         redirect_url = stored_url || root_url
         reset_session
-        token = user.create_session_token!
+        token = UserToken.create_session_token!(user)
         session[:user_token] = token
         redirect_to redirect_url, notice: "Logged in successfully.", status: :see_other
       else

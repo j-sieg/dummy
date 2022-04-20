@@ -14,7 +14,7 @@ module UserAuthentication
 
   def authenticate_user
     if token = session[:user_token]
-      @current_user = User.find_by_session_token(token)
+      @current_user = UserToken.find_user_by_session_token(token)
     end
   end
 
