@@ -1,6 +1,6 @@
 <h1>Reset your password</h1>
 
-<%= form_with(model: @user, url: update_reset_my_password_url(token: @token), method: :patch) do |form| %>
+<%= form_with(model: @user, url: update_reset_my_password_url(@token), method: :patch) do |form| %>
   <div>
     <%= form.label :password %>
     <%= form.password_field :password, autocomplete: "off" %>
