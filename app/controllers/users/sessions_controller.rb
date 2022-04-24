@@ -14,7 +14,7 @@ module Users
         session[:user_token] = token
         redirect_to redirect_url, notice: "Logged in successfully.", status: :see_other
       else
-        flash[:alert] = "Invalid email/password."
+        flash.now[:alert] = "Invalid email/password."
         render :new, status: :unprocessable_entity
       end
     end
