@@ -12,6 +12,8 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
         user: {email: "nobody@example.com", password: "it's m3?", password_confirmation: "it's m3?"}
       }
     end
+    perform_enqueued_jobs
+    assert_emails 1
 
     assert_redirected_to login_url
   end

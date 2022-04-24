@@ -7,7 +7,7 @@ module Users
     end
 
     def create
-      if (user = User.find_by(email: params[:email])&.authenticate(params[:password]))
+      if (user = User.confirmed.find_by(email: params[:email])&.authenticate(params[:password]))
         redirect_url = stored_url || root_url
         reset_session
         token = UserToken.create_session_token!(user)

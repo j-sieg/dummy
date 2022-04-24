@@ -54,6 +54,18 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Logged in successfully.", flash[:notice]
   end
 
+  test "#create doesn't log in an unconfirmed user" do
+    user = users(:unconfirmed)
+
+    assert_no_difference "UserToken.count" do
+      post login_url, params: {email: user.email, password: "It's m3?"}
+    end
+
+    assert_response :unprocessable_entity
+    refute user_logged_in?(user)
+    assert_equal "Invalid email/password.", flash[:alert]
+  end
+
   test "#destroy logs the user out of all sessions" do
     user = users(:james)
     user.tokens.create!(context: "session")

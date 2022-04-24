@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_secure_password
   has_many :tokens, class_name: "UserToken", dependent: :delete_all
 
+  validates :email, uniqueness: true
   validates :password, presence: true, length: (8..72)
 
   scope :confirmed, -> { where.not(confirmed_at: nil) }
