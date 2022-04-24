@@ -1,6 +1,5 @@
 module Users
   class RegistrationsController < ::ApplicationController
-    include UserAuthentication
     before_action :redirect_if_already_authenticated!
 
     def new
