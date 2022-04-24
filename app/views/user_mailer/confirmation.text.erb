@@ -1,0 +1,6 @@
+Hi <%= @user.email %>,
+
+You can confirm your account by visiting the link below:
+<%= update_user_confirmation_url(@token) %>
+
+If you didn't create an account with us, you can safely ignore this

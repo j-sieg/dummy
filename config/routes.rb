@@ -21,6 +21,12 @@ Rails.application.routes.draw do
     get "/reset-my-password/:token", to: "reset_passwords#edit", as: :edit_reset_my_password
     patch "/reset-my-password/:token", to: "reset_passwords#update", as: :update_reset_my_password
 
+    # Confirmation emails
+    get "/users/confirmation", to: "confirmations#new"
+    post "/users/confirmation", to: "confirmations#create"
+    get "/users/confirmation/:token", to: "confirmations#edit", as: :edit_user_confirmation
+    patch "/users/confirmation/:token", to: "confirmations#update", as: :update_user_confirmation
+
     get "/settings", to: "settings#index"
   end
 

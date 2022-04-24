@@ -13,9 +13,7 @@ class UserToken < ApplicationRecord
   # version for verification.
   attr_accessor :encoded_token
 
-  enum context: {session: "session", password_reset: "password_reset"}
-
-  scope :valid_reset_password_tokens, -> { where(created_at: reset_password_token_expiry_range) }
+  enum context: {session: "session", confirmation: "confirmation", password_reset: "password_reset"}
 
   class << self
     # We don't need to hash the token like we do for password resets
@@ -23,6 +21,17 @@ class UserToken < ApplicationRecord
     def create_session_token!(user)
       record = UserToken.create!(user: user, context: contexts[:session])
       record.token
+    end
+
+    def create_confirmation_token!(user)
+      encoded_token, hashed_token = build_hashed_token
+      create!(
+        user: user,
+        sent_to: user.email,
+        context: contexts[:confirmation],
+        token: hashed_token,
+        encoded_token: encoded_token
+      )
     end
 
     def create_reset_password_token(user)
@@ -37,19 +46,33 @@ class UserToken < ApplicationRecord
     end
 
     def find_user_by_session_token(token)
-      User.joins(:tokens).find_by(user_tokens: {token: token})
+      User.confirmed.joins(:tokens).find_by(user_tokens: {token: token})
     end
 
-    # Checks if the token is valid and returns the associated user.
     def find_user_by_reset_password_token(token)
-      decoded_token = Base64.urlsafe_decode64(token)
-      hashed_token = OpenSSL::Digest.digest(TOKEN_HASH_ALGO, decoded_token)
-
+      hashed_token = build_hashed_token_from_encoded_token(token)
       record =
         UserToken
           .includes(:user)
-          .valid_reset_password_tokens
+          .where(created_at: reset_password_valid_time_range)
           .find_by(token: hashed_token, context: contexts[:password_reset])
+
+      if record && record.sent_to == record.user.email
+        record.user
+      end
+
+    # Mostly just "invalid base64"s
+    rescue ArgumentError => exception
+      nil
+    end
+
+    def find_user_by_confirmation_token(token)
+      hashed_token = build_hashed_token_from_encoded_token(token)
+      record =
+        UserToken
+          .includes(:user)
+          .where(created_at: confirmation_token_valid_time_range)
+          .find_by(token: hashed_token, context: contexts[:confirmation])
 
       if record && record.sent_to == record.user.email
         record.user
@@ -70,8 +93,17 @@ class UserToken < ApplicationRecord
       [encoded_token, hashed_token]
     end
 
-    def reset_password_token_expiry_range
+    def build_hashed_token_from_encoded_token(encoded_token)
+      decoded_token = Base64.urlsafe_decode64(encoded_token)
+      OpenSSL::Digest.digest(TOKEN_HASH_ALGO, decoded_token)
+    end
+
+    def reset_password_valid_time_range
       1.hour.ago..
+    end
+
+    def confirmation_token_valid_time_range
+      3.days.ago..
     end
   end
 end
