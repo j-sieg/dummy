@@ -8,7 +8,7 @@ module Users
     end
 
     def create
-      if user = User.find_by(email: params[:email])
+      if user = User.confirmed.find_by(email: params[:email])
         user_token = UserToken.create_reset_password_token(user)
         UserMailer.with(user: user, token: user_token.encoded_token).reset_password.deliver_later
       end
