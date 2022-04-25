@@ -28,8 +28,13 @@ Rails.application.routes.draw do
     patch "/users/confirmation/:token", to: "confirmations#update", as: :update_user_confirmation
 
     get "/settings", to: "settings#edit"
+
+    # Change emails
     patch "/settings/update_mail", to: "settings#request_email_update", as: :user_request_email_update
     get "/settings/update_email/:token", to: "settings#update_email", as: :user_settings_update_email
+
+    # Change passwords
+    patch "/settings/passwords", to: "passwords#update", as: :update_user_password
   end
 
   root "root#index"

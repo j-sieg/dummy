@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Users::PasswordsControllerTest < ActionDispatch::IntegrationTest
+class Users::ResetPasswordsControllerTest < ActionDispatch::IntegrationTest
   test "#new doesn't crash" do
     get forgot_my_password_url
     assert_response :success
