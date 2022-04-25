@@ -12,7 +12,7 @@ module Users
         reset_session
         token = UserToken.create_session_token!(user)
         session[:user_token] = token
-        redirect_to redirect_url, notice: "Logged in successfully.", status: :see_other
+        redirect_to redirect_url, notice: "Logged in successfully."
       else
         flash.now[:alert] = "Invalid email/password."
         render :new, status: :unprocessable_entity
@@ -24,12 +24,12 @@ module Users
         token = @current_user&.active_sessions&.find_by(id: token_id)&.destroy
         respond_to do |format|
           format.turbo_stream { render locals: {token: token} } if token
-          format.html { redirect_to settings_url, notice: "Successfully emoved the session", status: :see_other }
+          format.html { redirect_to settings_url, notice: "Successfully removed the session" }
         end
       else
         @current_user&.active_sessions&.delete_all
         reset_session
-        redirect_to login_url, notice: "Logged out successfully.", status: :see_other
+        redirect_to login_url, notice: "Logged out successfully."
       end
     end
   end

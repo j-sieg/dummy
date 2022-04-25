@@ -24,7 +24,7 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
 
     assert user_logged_in?(user)
     assert_equal "Logged in successfully.", flash[:notice]
-    assert_response :see_other
+    assert_redirected_to root_url
   end
 
   test "#create responds with :unprocessable_entity when invalid" do
@@ -74,7 +74,7 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_difference "UserToken.count", -2 do
       delete logout_url
     end
-    assert_response :see_other
+    assert_redirected_to login_url
     assert "Logged out successfully", flash[:notice]
   end
 
@@ -88,16 +88,17 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_difference "UserToken.count", -1 do
       delete destroy_user_session_url(token)
     end
-    assert_response :see_other
+    assert_redirected_to settings_url
   end
 
   test "#destroy with a specific id doesn't crash even if the id doesn't exist" do
     delete destroy_user_session_url(500_000)
-    assert_response :see_other
+    assert_redirected_to settings_url
   end
 
   test "#destroy doesn't need a user to be logged in" do
     delete logout_url
-    assert_response :see_other
+    assert_redirected_to login_url
+    assert_equal "Logged out successfully.", flash[:notice]
   end
 end
