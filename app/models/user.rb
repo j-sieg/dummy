@@ -11,11 +11,15 @@ class User < ApplicationRecord
   scope :unconfirmed, -> { where(confirmed_at: nil) }
 
   def active_sessions
-    tokens.where(context: UserToken.contexts[:session])
+    tokens.where(context: UserToken::CONTEXTS[:session])
   end
 
   def confirmation_tokens
-    tokens.where(context: UserToken.contexts[:confirmation])
+    tokens.where(context: UserToken::CONTEXTS[:confirmation])
+  end
+
+  def change_email_tokens
+    tokens.where("starts_with(context, 'change:')")
   end
 
   def confirm!

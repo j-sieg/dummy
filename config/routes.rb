@@ -27,7 +27,9 @@ Rails.application.routes.draw do
     get "/users/confirmation/:token", to: "confirmations#edit", as: :edit_user_confirmation
     patch "/users/confirmation/:token", to: "confirmations#update", as: :update_user_confirmation
 
-    get "/settings", to: "settings#index"
+    get "/settings", to: "settings#edit"
+    patch "/settings/update_mail", to: "settings#request_email_update", as: :user_request_email_update
+    get "/settings/update_email/:token", to: "settings#update_email", as: :user_settings_update_email
   end
 
   root "root#index"

@@ -2,6 +2,7 @@ class UserToken < ApplicationRecord
   belongs_to :user
   has_secure_token length: 36
 
+  CONTEXTS = {session: "session", confirmation: "confirmation", password_reset: "password_reset"}.freeze
   RANDOM_BYTE_SIZE = 32
   TOKEN_HASH_ALGO = "SHA256"
 
@@ -13,14 +14,24 @@ class UserToken < ApplicationRecord
   # version for verification.
   attr_accessor :encoded_token
 
-  enum context: {session: "session", confirmation: "confirmation", password_reset: "password_reset"}
-
   class << self
     # We don't need to hash the token like we do for password resets
     # because it's stored in the session which is encrypted and signed.
     def create_session_token!(user)
-      record = UserToken.create!(user: user, context: contexts[:session])
+      record = UserToken.create!(user: user, context: CONTEXTS[:session])
       record.token
+    end
+
+    def create_change_email_token!(user, new_email)
+      encoded_token, hashed_token = build_hashed_token
+      context = "change:#{user.email}"
+      create!(
+        user: user,
+        sent_to: new_email,
+        context: context,
+        token: hashed_token,
+        encoded_token: encoded_token
+      )
     end
 
     def create_confirmation_token!(user)
@@ -28,7 +39,7 @@ class UserToken < ApplicationRecord
       create!(
         user: user,
         sent_to: user.email,
-        context: contexts[:confirmation],
+        context: CONTEXTS[:confirmation],
         token: hashed_token,
         encoded_token: encoded_token
       )
@@ -39,7 +50,7 @@ class UserToken < ApplicationRecord
       create(
         user: user,
         sent_to: user.email,
-        context: contexts[:password_reset],
+        context: CONTEXTS[:password_reset],
         token: hashed_token,
         encoded_token: encoded_token
       )
@@ -55,7 +66,7 @@ class UserToken < ApplicationRecord
         UserToken
           .includes(:user)
           .where(created_at: reset_password_valid_time_range)
-          .find_by(token: hashed_token, context: contexts[:password_reset])
+          .find_by(token: hashed_token, context: CONTEXTS[:password_reset])
 
       if record && record.sent_to == record.user.email
         record.user
@@ -72,7 +83,7 @@ class UserToken < ApplicationRecord
         UserToken
           .includes(:user)
           .where(created_at: confirmation_token_valid_time_range)
-          .find_by(token: hashed_token, context: contexts[:confirmation])
+          .find_by(token: hashed_token, context: CONTEXTS[:confirmation])
 
       if record && record.sent_to == record.user.email
         record.user
@@ -81,6 +92,13 @@ class UserToken < ApplicationRecord
     # Mostly just "invalid base64"s
     rescue ArgumentError => exception
       nil
+    end
+
+    def find_record_by_user_change_email_token(user, token)
+      hashed_token = build_hashed_token_from_encoded_token(token)
+      context = "change:#{user.email}"
+
+      UserToken.includes(:user).find_by(token: hashed_token, context: context)
     end
 
     # Returns a urlsafe base64 encoded token that can be used

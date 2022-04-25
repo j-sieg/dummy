@@ -10,4 +10,10 @@ class UserMailer < ApplicationMailer
     @token = params[:token]
     mail(to: @user.email, subject: "Confirm your account")
   end
+
+  def update_email
+    @receiver_email = params[:receiver_email]
+    @token = params[:token]
+    mail(to: @receiver_email, subject: "Update your email")
+  end
 end
