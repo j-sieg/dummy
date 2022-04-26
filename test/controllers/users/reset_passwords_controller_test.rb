@@ -40,7 +40,7 @@ class Users::ResetPasswordsControllerTest < ActionDispatch::IntegrationTest
 
   test "#edit with a valid token" do
     user = users(:james)
-    encoded_token = UserToken.create_reset_password_token(user).encoded_token
+    encoded_token = UserToken.create_reset_password_token!(user).encoded_token
 
     get edit_reset_my_password_url(token: encoded_token)
     assert_response :success
@@ -54,7 +54,7 @@ class Users::ResetPasswordsControllerTest < ActionDispatch::IntegrationTest
 
   test "#edit when a token has expired" do
     user = users(:james)
-    encoded_token = UserToken.create_reset_password_token(user).encoded_token
+    encoded_token = UserToken.create_reset_password_token!(user).encoded_token
 
     travel_to (1.hour.from_now + 5.seconds) do
       get edit_reset_my_password_url(token: encoded_token)
@@ -71,7 +71,7 @@ class Users::ResetPasswordsControllerTest < ActionDispatch::IntegrationTest
 
   test "#update when the token has expired" do
     user = users(:josh)
-    encoded_token = UserToken.create_reset_password_token(user).encoded_token
+    encoded_token = UserToken.create_reset_password_token!(user).encoded_token
 
     travel_to (1.hour.from_now + 5.seconds) do
       patch update_reset_my_password_url(token: encoded_token)
@@ -82,7 +82,7 @@ class Users::ResetPasswordsControllerTest < ActionDispatch::IntegrationTest
 
   test "#update when successful" do
     user = users(:josh)
-    encoded_token = UserToken.create_reset_password_token(user).encoded_token
+    encoded_token = UserToken.create_reset_password_token!(user).encoded_token
     valid_params = {
       user: {password: "sup3rSecure!", password_confirmation: "sup3rSecure!"}
     }

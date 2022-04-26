@@ -45,9 +45,9 @@ class UserToken < ApplicationRecord
       )
     end
 
-    def create_reset_password_token(user)
+    def create_reset_password_token!(user)
       encoded_token, hashed_token = build_hashed_token
-      create(
+      create!(
         user: user,
         sent_to: user.email,
         context: CONTEXTS[:password_reset],
