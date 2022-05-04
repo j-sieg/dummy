@@ -14,3 +14,13 @@ josh:
   <<: *DEFAULTS
   email: josh@example.com
   confirmed_at: <%= 3.months.ago %>
+
+rey:
+  <<: *DEFAULTS
+  email: rey@example.com
+  confirmed_at: <%= 3.months.ago %>
+
+kayle:
+  <<: *DEFAULTS
+  email: kayle@example.com
+  confirmed_at: <%= 3.months.ago %>

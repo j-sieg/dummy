@@ -1,5 +1,6 @@
 <h1> Sign up </h1>
-<%= form_with(model: user, url: sign_up_path, method: :post) do |form| %>
+
+<%= form_with(model: user, url: sign_up_path(invite_token: params[:invite_token]), method: :post) do |form| %>
   <div>
     <%= form.label :email %>
     <%= form.email_field :email %>
@@ -19,6 +20,12 @@
   </div>
 
   <%= form.submit "Sign up" %>
+
+  <% if invalid_invite_token? %>
+    <p>Invite code is invalid.</p>
+  <% elsif valid_invite_token? %>
+    <p>Signing up with <%= @inviter.email %>'s invite code.</p>
+  <% end %>
 <% end %>
 
 <p>Already have an account? <%= link_to "Log in", login_url %></p>

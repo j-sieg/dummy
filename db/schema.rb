@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_24_141829) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_02_142522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "user_invites", force: :cascade do |t|
+    t.bigint "inviter_id"
+    t.bigint "invited_id"
+    t.integer "level", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invited_id"], name: "index_user_invites_on_invited_id", unique: true
+    t.index ["inviter_id"], name: "index_user_invites_on_inviter_id"
+  end
 
   create_table "user_tokens", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -33,5 +43,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_24_141829) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "user_invites", "users", column: "invited_id"
+  add_foreign_key "user_invites", "users", column: "inviter_id"
   add_foreign_key "user_tokens", "users"
 end

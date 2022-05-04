@@ -35,6 +35,9 @@ Rails.application.routes.draw do
 
     # Change passwords
     patch "/settings/passwords", to: "passwords#update", as: :update_user_password
+
+    # Change invite token
+    patch "/settings/update_invite_token", to: "invite_token#update", as: :update_user_invite_token
   end
 
   root "root#index"

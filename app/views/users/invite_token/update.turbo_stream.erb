@@ -1,0 +1,7 @@
+<%= turbo_stream.replace dom_id(current_user, :invite_code) do %>
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  <strong>Updated your invite link.</strong>
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+	<%= render partial: "users/invite_token/invite_code" %>
+<% end %>

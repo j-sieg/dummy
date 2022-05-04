@@ -1,0 +1,15 @@
+<%= content_tag :div, id: dom_id(current_user, :invite_code) do %>
+  <div class="mb-2" data-controller="clipboard">
+    <label for="invite-sign-up-link">Send this to your people:</label>
+    <div class="d-flex">
+      <input id="invite-sign-up-link"
+        type="text"
+        class="form-control"
+        value="<%= sign_up_url(invite_token: current_user.invite_token.token) %>"
+        data-clipboard-target="source"
+        readonly />
+      <button type="button" data-action="clipboard#copy" class="ms-2">copy</button>
+    </div>
+  </div>
+	<%= button_to "Change token", update_user_invite_token_path, method: :patch %>
+<% end %>
