@@ -104,7 +104,7 @@ class UserToken < ApplicationRecord
     # Returns a urlsafe base64 encoded token that can be used
     # for user consumption and a hashed token for database storage.
     def build_hashed_token
-      raw_token = OpenSSL::Random.random_bytes(RANDOM_BYTE_SIZE)
+      raw_token = SecureRandom.bytes(RANDOM_BYTE_SIZE)
       hashed_token = OpenSSL::Digest.digest(TOKEN_HASH_ALGO, raw_token)
       encoded_token = Base64.urlsafe_encode64(raw_token)
 

@@ -30,7 +30,7 @@ Rails.application.routes.draw do
     get "/settings", to: "settings#edit"
 
     # Change emails
-    patch "/settings/update_mail", to: "settings#request_email_update", as: :user_request_email_update
+    patch "/settings/update_email", to: "settings#request_email_update", as: :user_request_email_update
     get "/settings/update_email/:token", to: "settings#update_email", as: :user_settings_update_email
 
     # Change passwords
