@@ -3,7 +3,8 @@ module Users
     before_action :find_change_email_token, only: [:update_email]
 
     def edit
-      render locals: {active_sessions: current_user.active_sessions}
+      password = Password.new(has_secure_password: current_user)
+      render locals: {active_sessions: current_user.active_sessions, password: password}
     end
 
     def request_email_update

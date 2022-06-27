@@ -11,7 +11,7 @@
   <%= form.submit "Update" %>
 <% end %>
 
-<%= render "users/passwords/form" %>
+<%= render partial: "users/passwords/form", locals: {password: password} %>
 
 <h2>All your active sessions</h2>
 <p>BTW, logging out of your account logs you out of all your sessions.</p>

@@ -6,25 +6,15 @@ class Users::PasswordsControllerTest < ActionDispatch::IntegrationTest
     user_log_in_as(user)
 
     patch update_user_password_url, params: {
-      current_password: "It's m3?",
-      user: {password: "n3w p4ssw0rd!", password_confirmation: "n3w p4ssw0rd!"}
+      password: {
+        current_password: "It's m3?",
+        password: "n3w p4ssw0rd!",
+        password_confirmation: "n3w p4ssw0rd!"
+      }
     }
 
     assert_redirected_to settings_url
     assert_equal "Successfully changed your password.", flash[:notice]
-  end
-
-  test "invalid current_password" do
-    user = users(:james)
-    user_log_in_as(user)
-
-    patch update_user_password_url, params: {
-      current_password: "invalid current password",
-      user: {password: "n3w p4ssw0rd!", password_confirmation: "n3w p4ssw0rd!"}
-    }
-
-    assert_redirected_to settings_url
-    assert_equal "Failed to change your password.", flash[:alert]
   end
 
   test "invalid password_params" do
@@ -32,8 +22,11 @@ class Users::PasswordsControllerTest < ActionDispatch::IntegrationTest
     user_log_in_as(user)
 
     patch update_user_password_url, params: {
-      current_password: "It's m3?",
-      user: {password: "n3w p4ssw0rd!", password_confirmation: "they don't match"}
+      password: {
+        current_password: "It's m3?",
+        password: "n3w p4ssw0rd!",
+        password_confirmation: "they don't match"
+      }
     }
 
     assert_redirected_to settings_url

@@ -1,10 +1,8 @@
-<%= form_with(id: "change_password_form", model: current_user, url: update_user_password_path, method: :patch) do |form| %>
+<%= form_with(id: "change_password_form", model: password, url: update_user_password_path, method: :patch) do |form| %>
   <div>
-    <%= label_tag :current_password %>
-    <%= password_field_tag :current_password, nil %>
-    <% if @current_password_invalid %>
-      <p class="text-danger">incorrect password</p>
-    <% end %>
+    <%= form.label :current_password %>
+    <%= form.password_field :current_password %>
+    <%= field_errors(form.object, :current_password) %>
   </div>
 
   <div>
