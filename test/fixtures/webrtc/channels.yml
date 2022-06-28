@@ -1,0 +1,8 @@
+DEFAULTS: &DEFAULTS
+  name: $LABEL
+
+general:
+  <<: *DEFAULTS
+
+nsfw:
+  <<: *DEFAULTS

@@ -5,6 +5,11 @@ Rails.application.routes.draw do
   # root "articles#index"
 
   scope module: "users" do
+    resources :channels, only: [:show]
+
+    ### AUTHENTICATION-RELATED AND SETTINGS ROUTES BELOW
+    ### Since these are custom routes, they should always have a comment for their existence
+
     # Registration
     get "/sign_up", to: "registrations#new"
     post "/sign_up", to: "registrations#create"

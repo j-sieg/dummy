@@ -1,0 +1,11 @@
+<div data-controller="webrtc" data-webrtc-channel-value="WebrtcChannel" data-webrtc-channel-name-value="<%= channel.name %>">
+  <header>
+    <h1>Welcome to the #<%= channel.name %> channel</h1>
+    <button type="button"
+      class="call-button"
+      data-webrtc-target="callButton"
+      data-action="click->webrtc#handleCallButton">
+      Join Call
+    </button>
+  </header>
+</div>
