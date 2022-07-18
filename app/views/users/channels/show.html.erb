@@ -1,6 +1,6 @@
 <div data-controller="webrtc" data-webrtc-channel-value="WebrtcChannel" data-webrtc-channel-name-value="<%= channel.name %>">
   <header>
-    <h1>Welcome to the #<%= channel.name %> channel</h1>
+    <h1>#<%= channel.name %></h1>
     <button type="button"
       class="call-button"
       data-webrtc-target="callButton"
@@ -8,4 +8,18 @@
       Join Call
     </button>
   </header>
+  <article id="videos" class="row">
+    <video id="self"
+      class="col m-2"
+      data-webrtc-target="video"
+      autoplay
+      muted
+      playsinline>
+    </video>
+    <video id="peer"
+      class="col m-2"
+      autoplay
+      playsinline>
+    </video>
+  </article>
 </div>
