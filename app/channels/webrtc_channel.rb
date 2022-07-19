@@ -27,6 +27,10 @@ class WebrtcChannel < ApplicationCable::Channel
   end
 
   def signal(data)
-    puts data
+    WebrtcChannel.broadcast_to(@stream_name, {
+      peer_id: current_user.id,
+      event_name: "signal",
+      data: data
+    })
   end
 end
