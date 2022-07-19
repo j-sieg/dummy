@@ -15,7 +15,7 @@ export default class WebrtcController extends Controller {
       isIgnoringOffer: false,
       isSettingRemoteAnswerPending: false,
       rtcConfig: null,
-      mediaConstraints: {audio: false, video: true}
+      mediaConstraints: {audio: true, video: true}
     }
     this.peer = { connection: new RTCPeerConnection(this.config.rtcConfig) }
     this.requestUserMedia()
@@ -165,10 +165,7 @@ export default class WebrtcController extends Controller {
   async requestUserMedia() {
     // https://developer.mozilla.org/en-US/docs/Web/API/MediaStream
     // Adding a MediaStreamTrack to the MediaStream
-    this.stream = new MediaStream()
-    const media = await navigator.mediaDevices.getUserMedia(this.config.mediaConstraints)
-    const mediaTracks = media.getTracks()
-    this.stream.addTrack(mediaTracks[0])
+    this.stream = await navigator.mediaDevices.getUserMedia(this.config.mediaConstraints)
     this.displayStream("#" + this.videoTarget.id, this.stream)
   }
 
@@ -176,7 +173,7 @@ export default class WebrtcController extends Controller {
   // "... adds a new media track to the set of tracks which will be transmitted to the other peer"
   addStreamingMedia(peer, stream) {
     if (stream) {
-      for(let track of stream.getTracks()) {
+      for (let track of stream.getTracks()) {
         peer.connection.addTrack(track, stream)
       }
     }
