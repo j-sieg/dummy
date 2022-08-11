@@ -1,0 +1,9 @@
+<h1>Your conversations</h1>
+<% conversations.each do |conversation| %>
+  <article class="border border-dark p-2">
+    <%= link_to conversation_path(conversation), class: "text-decoration-none" do %>
+      <h2 class="fs-5"><%= conversation.name %></h2>
+      <p><%= time_ago_in_words(conversation.created_at) %> ago</p>
+    <% end %>
+  </article>
+<% end %>

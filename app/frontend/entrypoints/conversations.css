@@ -1,0 +1,16 @@
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+main {
+  height: 90%;
+}
+
+main > div {
+  height: 95%;
+}
+
+main > div > div[id^="messages_conversation_"] {
+  overflow-y: scroll;
+}

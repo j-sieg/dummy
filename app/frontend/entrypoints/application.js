@@ -1,6 +1,7 @@
 // Hotwire
-import * as Turbo from '@hotwired/turbo'
-Turbo.start()
+import "@hotwired/turbo-rails"
+
+// Stimulus Controllers
 import "./controllers"
 
 // Get Bootstrap's JavaScript to work

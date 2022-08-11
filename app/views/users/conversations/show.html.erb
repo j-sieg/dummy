@@ -1,0 +1,15 @@
+<%= turbo_stream_from dom_id(conversation) %>
+<h1>Here lies Conversation#<%=conversation.id %></h1>
+<div class="d-flex flex-column border p-2">
+  <div id="<%= dom_id(conversation, :messages) %>" class="flex-grow-1 d-flex flex-column">
+    <% messages.each do |message| %>
+      <%= render partial: "users/messages/message", locals: {message: message} %>
+    <% end %>
+  </div>
+  <%= form_with(model: Message.new, url: conversation_messages_path(conversation), class: "border-top border-2 pt-2") do |form| %>
+    <div class="d-flex">
+      <%= form.text_field :body, class: "form-control" %>
+      <%= form.submit "SEND", class: "ms-2" %>
+    </div>
+  <% end %>
+</div>

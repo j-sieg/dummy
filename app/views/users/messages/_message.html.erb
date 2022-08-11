@@ -1,0 +1,9 @@
+<%= content_tag :article, id: dom_id(message) do %>
+  <p class="border border-dark border-3 p-2">
+    <%= message.body %>
+    <br />
+    <%= time_ago_in_words(message.created_at) %> ago
+    <br />
+    - <%= message.sender.email %>
+  </p>
+<% end %>
