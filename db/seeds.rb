@@ -7,7 +7,7 @@ unless Rails.env.development?
   exit 0
 end
 
-user = User.create!(email: "jpeck@example.com", password: "it's m3?")
+user = User.create!(email: "jpeck@example.com", password: "it's m3?", confirmed_at: Time.current)
 if user.persisted?
   log "Created default User"
   log "Email: jpeck@example.com"
