@@ -8,4 +8,5 @@ import * as bootstrap from "bootstrap"
 
 // Styles
 import "~/styles/_custom.scss"
+import "~/styles/calendar_table.css"
 import "~/styles/application.css"
