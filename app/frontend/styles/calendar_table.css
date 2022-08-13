@@ -28,3 +28,10 @@
   background: #333;
   border-radius: 50%;
 }
+
+.calendar--table > tbody > tr > td.not--month {
+  color: white;
+  background: rgb(221, 221, 221);
+  border-radius: 50%;
+  cursor: default;
+}
