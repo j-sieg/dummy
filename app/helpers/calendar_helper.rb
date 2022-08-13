@@ -1,20 +1,21 @@
 module CalendarHelper
-  def calendar(date = Date.current, &block)
-    Calendar.new(self, date, block).table
+  def calendar(date: Date.current, path_method: :root_path, &block)
+    Calendar.new(self, date, path_method, block).table
   end
 
   class Calendar
     HEADER = %w(Sun Mon Tue Wed Thu Fri Sat).freeze
     START_DAY = :sunday
 
-    attr_reader :view, :date, :block
+    attr_reader :view, :date, :block, :path_method
 
     delegate :content_tag, to: :view
 
-    def initialize(view, date, block)
+    def initialize(view, date, path_method, block)
       @view = view
       @date = date
       @block = block
+      @path_method = path_method
     end
 
     def table
@@ -34,15 +35,15 @@ module CalendarHelper
     def month_header
       content_tag :tr do
         month = content_tag :th, colspan: 5 do
-          date.strftime("%B")
+          date.strftime("%B %Y")
         end
 
         link_last_month = content_tag :th do
-          view.link_to("<", view.root_path(date: date.last_month), class: "month--link")
+          view.link_to("<", view.send(path_method, date: date.last_month), class: "month--link")
         end
 
         link_next_month = content_tag :th do
-          view.link_to(">", view.root_path(date: date.next_month), class: "month--link")
+          view.link_to(">", view.send(path_method, date: date.next_month), class: "month--link")
         end
 
         link_last_month + month + link_next_month
