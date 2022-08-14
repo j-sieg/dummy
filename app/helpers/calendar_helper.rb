@@ -70,7 +70,7 @@ module CalendarHelper
 
     def day_classes(day)
       classes = []
-      classes << "today" if day == Date.current
+      classes << "today" if day == date
       classes << "not--month" if day.month != date.month
       classes.empty? ? nil : classes.join(" ")
     end
