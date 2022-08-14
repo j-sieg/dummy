@@ -1,4 +1,6 @@
 <h1>Daily Expenses</h1>
-<%= calendar(date: @date_viewed, path_method: :daily_expenses_path) do |date_for_month| %>
-  <%= date_for_month.day %>
-<% end %>
+<div data-controller="calendar">
+  <%= calendar(date: @date_viewed, path_method: :daily_expenses_path) do |date_for_month| %>
+    <%= date_for_month.day %>
+  <% end %>
+</div>

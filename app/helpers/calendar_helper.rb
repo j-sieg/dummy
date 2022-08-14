@@ -65,7 +65,7 @@ module CalendarHelper
     end
 
     def day_cell(day)
-      content_tag :td, view.capture(day, &block), class: day_classes(day)
+      content_tag :td, view.capture(day, &block), class: day_classes(day), data: {agenda_date: day.to_s}
     end
 
     def day_classes(day)
