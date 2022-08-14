@@ -29,6 +29,10 @@
   border-radius: 50%;
 }
 
+.calendar--table > tbody > tr > td.today:not([class="not--month"]):hover {
+  background: black;
+}
+
 .calendar--table > tbody > tr > td.not--month {
   color: white;
   background: rgb(221, 221, 221);
