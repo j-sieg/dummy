@@ -2,7 +2,7 @@ require "test_helper"
 
 class CalendarHelperTest < ActionView::TestCase
   test "#calendar generates a whole month's calendar" do
-    current_date = Date.parse("2022-08-13")
+    current_date = Date.parse("2022-08-10")
     generated_calendar = calendar(date: current_date) do |date|
       date.day.to_s
     end
@@ -11,9 +11,9 @@ class CalendarHelperTest < ActionView::TestCase
       <table class="calendar--table">
       <thead>
       <tr>
-      <th><a class="month--link" href="/?date=2022-07-13">&lt;</a></th>
+      <th><a class="month--link" href="/?date=2022-07-10">&lt;</a></th>
       <th colspan="5">August 2022</th>
-      <th><a class="month--link" href="/?date=2022-09-13">&gt;</a></th>
+      <th><a class="month--link" href="/?date=2022-09-10">&gt;</a></th>
       </tr>
       <tr>
       <th>Sun</th>
@@ -40,10 +40,10 @@ class CalendarHelperTest < ActionView::TestCase
       <td>7</td>
       <td>8</td>
       <td>9</td>
-      <td>10</td>
+      <td class=\"today\">10</td>
       <td>11</td>
       <td>12</td>
-      <td class=\"today\">13</td>
+      <td>13</td>
       </tr>
 
       <tr>
