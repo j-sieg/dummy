@@ -24,7 +24,7 @@ export default class CalendarController extends Controller {
   }
 
   visitAgendaDate(event) {
-    const agendaDate = event.target.dataset.agendaDate
+    const agendaDate = event.currentTarget.dataset.agendaDate
     const url = new URL(document.location)
     url.searchParams.set("date", agendaDate)
     Turbo.visit(url)

@@ -1,6 +1,44 @@
-<h1>Daily Expenses</h1>
-<div data-controller="calendar">
-  <%= calendar(date: @date_viewed, path_method: :daily_expenses_path) do |date_for_month| %>
-    <%= date_for_month.day %>
-  <% end %>
+<h1>Expenses Logger</h1>
+<div class="row">
+  <div class="col-md-4">
+    <div data-controller="calendar" class="table-responsive">
+      <%= calendar(date: @date_viewed, marked_dates: dates_with_expenses, path_method: :daily_expenses_path) %>
+    </div>
+  </div>
+  <div class="col-md-8 border border-dark">
+    <h2 class="fs-4 mt-2">Log an expense</h2>
+    <%= form_with(model: daily_expense) do |form| %>
+      <%= form.hidden_field :date, value: @date_viewed %>
+      <div class="mb-2">
+        <%= form.label :purpose, class: "form-label" %>
+        <%= form.text_field :purpose, class: "form-control" %>
+      </div>
+      <div class="mb-2">
+        <%= form.label :amount, class: "form-label" %>
+        <%= form.number_field :amount, class: "form-control" %>
+      </div>
+      <%= form.submit "Log", class: "btn btn-primary text-white" %>
+    <% end %>
+  </div>
 </div>
+
+<hr />
+
+<% if daily_expenses.size < 1 %>
+  <article>
+    <h1>No Expenses for <%= @date_viewed.strftime("%B %d, %Y") %><h1>
+  </article>
+<% else %>
+  <article>
+    <h1>Expenses for <%= @date_viewed.strftime("%B %d, %Y") %></h1>
+    <% daily_expenses.each do |daily_expense| %>
+      <section class="border border-dark p-2 mb-2">
+        <p class="p-0 m-0">
+          Purpose: <%= daily_expense.purpose %>
+          <br />
+          Amount: <%= daily_expense.amount %>
+        </p>
+      </section>
+    <% end %>
+  </article>
+<% end %>
