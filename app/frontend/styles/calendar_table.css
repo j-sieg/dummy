@@ -17,13 +17,26 @@
   text-align: center;
 }
 
-.calendar--table > tbody > tr > td {
+.calendar--table > tbody > tr > .calendar--cell {
   padding: 8px 10px;
   text-align: center;
   cursor: pointer;
 }
 
-.calendar--table > tbody > tr > td.today {
+.calendar--table > tbody > tr > .calendar--cell > .calendar--day {
+  position: relative;
+}
+
+.calendar--table > tbody > tr > .calendar--cell > .calendar--day > .calendar--item {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 10px;
+  color: hotpink;
+  font-weight: bolder;
+}
+
+.calendar--table > tbody > tr > td.calendar--cell.today {
   color: white;
   background: #333;
   border-radius: 50%;
