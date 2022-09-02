@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   scope module: "users" do
     resources :daily_expenses
+    resources :monthly_expenses_breakdown, only: [:show], param: :date
 
     ### CUSTOM AUTHENTICATION ROUTES BELOW
 
