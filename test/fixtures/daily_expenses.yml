@@ -1,1 +1,19 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# Note: the amount is stored in cents
+
+august_grab:
+  user: james
+  date: "2022-08-01"
+  purpose: grab
+  amount: 50_097
+
+august_wifi:
+  user: james
+  date: "2022-08-17"
+  purpose: wifi
+  amount: 180_000
+
+august_donation:
+  user: james
+  date: "2022-08-17"
+  purpose: donation
+  amount: 500_000

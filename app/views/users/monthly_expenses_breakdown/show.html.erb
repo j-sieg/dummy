@@ -1,0 +1,40 @@
+<% if @monthly_expenses.no_expenses_this_month? %>
+  <article>
+    <h1>Congrats! You didn't spend a dime for the<br />whole month of <%= month_and_year_for_date(date) %>.</h1>
+    <%= link_to daily_expenses_path(date: date) do %>
+      <span>&#8592; Daily Expenses</span>
+    <% end %>
+  </article>
+<% else %>
+  <h1>Breakdown for <%= month_and_year_for_date(date) %></h1>
+
+  <%= link_to daily_expenses_path(date: date) do %>
+    <span>&#8592; Daily Expenses</span>
+  <% end %>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Amount</th>
+          <th>Purpose</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% daily_expenses.each do |daily_expense| %>
+          <tr>
+            <td><%= number_to_pesos(daily_expense.amount_from_cents) %></td>
+            <td><%= daily_expense.purpose %></td>
+            <td><%= daily_expense.date %></td>
+          </tr>
+        <% end %>
+        <tr>
+          <td scope="col" colspan="3" class="fw-bolder fs-3">
+            <span>Total: <%= number_to_pesos(total_for_month) %></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<% end %>

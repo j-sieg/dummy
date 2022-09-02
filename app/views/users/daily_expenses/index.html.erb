@@ -1,6 +1,7 @@
 <h1>Expenses Logger</h1>
 <div class="row">
   <div class="col-md-4">
+    <%= link_to "Breakdown for #{@date_viewed.strftime("%B")}", monthly_expenses_breakdown_path(@date_viewed), class: "btn btn-sm btn-primary mb-2 text-white" %>
     <div data-controller="calendar" class="table-responsive">
       <%= calendar(date: @date_viewed, marked_dates: dates_with_expenses, path_method: :daily_expenses_path) %>
     </div>
@@ -15,7 +16,7 @@
       </div>
       <div class="mb-2">
         <%= form.label :amount, class: "form-label" %>
-        <%= form.number_field :amount, class: "form-control" %>
+        <%= form.number_field :amount, class: "form-control", step: "0.01" %>
       </div>
       <%= form.submit "Log", class: "btn btn-primary text-white" %>
     <% end %>
@@ -26,17 +27,17 @@
 
 <% if daily_expenses.size < 1 %>
   <article>
-    <h1>No Expenses for <%= @date_viewed.strftime("%B %d, %Y") %><h1>
+    <h1>No Expenses for <%= month_day_year_for_date(@date_viewed) %><h1>
   </article>
 <% else %>
   <article>
-    <h1>Expenses for <%= @date_viewed.strftime("%B %d, %Y") %></h1>
+    <h1>Expenses for <%= month_day_year_for_date(@date_viewed) %></h1>
     <% daily_expenses.each do |daily_expense| %>
       <section class="border border-dark p-2 mb-2">
         <p class="p-0 m-0">
           Purpose: <%= daily_expense.purpose %>
           <br />
-          Amount: <%= daily_expense.amount %>
+          Amount: <%= number_to_pesos(daily_expense.amount_from_cents) %>
         </p>
       </section>
     <% end %>
