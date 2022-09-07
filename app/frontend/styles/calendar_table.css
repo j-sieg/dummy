@@ -31,9 +31,10 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: 10px;
+  top: -7px;
   color: hotpink;
   font-weight: bolder;
+  font-size: 2rem;
 }
 
 .calendar--table > tbody > tr > td.calendar--cell.today {
