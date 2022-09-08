@@ -1,20 +1,20 @@
 <%= form_with(id: "change_password_form", model: password, url: update_user_password_path, method: :patch) do |form| %>
-  <div>
-    <%= form.label :current_password %>
-    <%= form.password_field :current_password %>
+  <div class="mb-2">
+    <%= form.label :current_password, class: "form-label" %>
+    <%= form.password_field :current_password, class: "form-control" %>
     <%= field_errors(form.object, :current_password) %>
   </div>
 
-  <div>
-    <%= form.label :password %>
-    <%= form.password_field :password %>
+  <div class="mb-2">
+    <%= form.label :password, class: "form-label" %>
+    <%= form.password_field :password, class: "form-control" %>
     <%= field_errors(form.object, :password) %>
   </div>
 
-  <div>
-    <%= form.label :password_confirmation %>
-    <%= form.password_field :password_confirmation %>
+  <div class="mb-2">
+    <%= form.label :password_confirmation, class: "form-label" %>
+    <%= form.password_field :password_confirmation, class: "form-control"  %>
     <%= field_errors(form.object, :password_confirmation) %>
   </div>
-  <%= form.submit "Change password" %>
+  <%= form.submit "Change password", class: "btn btn-primary" %>
 <% end %>

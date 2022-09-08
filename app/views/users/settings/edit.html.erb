@@ -1,31 +1,50 @@
-<h1>Here lies <%= current_user.email %>'s settings</h1>
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <%= render "shared/flash_message", class: "text-center" %>
 
-<%= render "shared/flash_message" %>
+    <h1 class="text-center">Here lies <%= current_user.email %>'s settings</h1>
+    <%= form_with(url: user_request_email_update_path, method: :patch, class: "mb-2") do |form| %>
+      <%= hidden_field_tag :change, "email" %>
+      <div class="row">
+        <div class="col-md-8">
+          <%= form.email_field :email, value: current_user.email, class: "form-control" %>
+          <% if error_message = local_assigns[:error_message] %>
+            <p class="text-danger"><%= error_message %></p>
+          <% end %>
+        </div>
+        <div class="col-md-4">
+          <%= form.submit "Update", class: "btn btn-primary" %>
+        </div>
+      </div>
+    <% end %>
 
-<%= form_with(url: user_request_email_update_path, method: :patch) do |form| %>
-  <%= hidden_field_tag :change, "email" %>
-  <%= form.email_field :email, value: current_user.email %>
-  <% if error_message = local_assigns[:error_message] %>
-    <p class="text-danger"><%= error_message %></p>
-  <% end %>
-  <%= form.submit "Update" %>
-<% end %>
+    <details class="mb-2">
+      <summary>Change Password</summary>
+      <div class="mt-2 shadow-sm p-4 mb-2">
+        <%= render partial: "users/passwords/form", locals: {password: password} %>
+      </div>
+    </details>
 
-<%= render partial: "users/passwords/form", locals: {password: password} %>
+    <details>
+      <summary>All your active sessions</summary>
+      <div class="mt-2 shadow-sm p-4 mb-2">
+        <p>BTW, logging out of your account logs you out of all your sessions.</p>
+        <ul>
+          <% active_sessions.each do |user_token| %>
+            <li id="<%= dom_id(user_token) %>">
+              <%= user_token.created_at %>
+              <% if (user_token.token == session[:user_token]) %>
+                <p><strong>This is your current session</strong></p>
+                <% else %>
+                <%= form_with(model: user_token, url: destroy_user_session_path(user_token), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
+                  <%= form.submit "Delete" %>
+                <% end %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
 
-<h2>All your active sessions</h2>
-<p>BTW, logging out of your account logs you out of all your sessions.</p>
-<ul>
-  <% active_sessions.each do |user_token| %>
-    <li id="<%= dom_id(user_token) %>">
-      <%= user_token.created_at %>
-      <% if (user_token.token == session[:user_token]) %>
-        <p><strong>This is your current session</strong></p>
-        <% else %>
-        <%= form_with(model: user_token, url: destroy_user_session_path(user_token), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
-          <%= form.submit "Delete" %>
-        <% end %>
-      <% end %>
-    </li>
-  <% end %>
-</ul>
