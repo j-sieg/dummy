@@ -1,0 +1,29 @@
+module <%= class_name.pluralize %>
+  class RegistrationsController < ::ApplicationController
+    before_action :redirect_if_already_authenticated!
+
+    def new
+      render locals: {<%= singular_name %>: <%= class_name %>.new}
+    end
+
+    def create
+      <%= singular_name %> = <%= class_name %>.new(<%= singular_name %>_params)
+
+      if <%= singular_name %>.save
+        <%= singular_name %>_token = <%= class_name %>Token.create_confirmation_token!(<%= singular_name %>)
+        <%= class_name%>Mailer.with(user: <%= singular_name %>, token: <%= singular_name %>_token.encoded_token).confirmation.deliver_later
+
+        flash[:notice] = "You will receive email confirmation instructions in few minutes."
+        redirect_to login_url
+      else
+        render :new, locals: {<%= singular_name %>: <%= singular_name %>}, status: :unprocessable_entity
+      end
+    end
+
+    private
+
+    def <%= singular_name %>_params
+      params.require(:<%= singular_name %>).permit(:email, :password, :password_confirmation)
+    end
+  end
+end

@@ -1,0 +1,25 @@
+class CreateGenAuth<%= class_name %>Tables < ActiveRecord::Migration[7.0]
+  def change
+    # For <%= class_name %> 
+    create_table :<%= plural_name %> do |t|
+      t.string :email
+      t.string :password_digest
+      t.datetime :confirmed_at
+
+      t.timestamps
+    end
+
+    add_index :<%= plural_name %>, [:email], unique: true
+
+    # For <%= class_name %>Token
+    create_table :<%= singular_name %>_tokens do |t|
+      t.references :<%= singular_name %>, foreign_key: true, null: false
+      t.binary :token, null: false
+      t.string :context, null: false
+      t.string :sent_to
+      t.datetime :created_at, null: false
+    end
+
+    add_index :<%= singular_name %>_tokens, [:token, :context], unique: true
+  end
+end

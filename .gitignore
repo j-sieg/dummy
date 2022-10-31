@@ -41,3 +41,6 @@ node_modules
 
 # Ignore environment variables in development
 config/application.yml
+
+# Ignore .swp files (when using vim)
+*.swp
