@@ -1,5 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 import { cable } from "@hotwired/turbo-rails"
+import { VideoFX } from "../video_fx/index"
+
+// We need this for listening to RTCPeerConnection's onconnectionstatechange
+import "webrtc-adapter"
 
 export default class WebrtcController extends Controller {
   static targets = ["callButton", "video"]
@@ -9,15 +13,17 @@ export default class WebrtcController extends Controller {
   }
 
   async connect() {
+    this.videoFx = new VideoFX()
     this.config = {
       isPolite: false,
       isMakingOffer: false,
       isIgnoringOffer: false,
       isSettingRemoteAnswerPending: false,
       rtcConfig: null,
-      mediaConstraints: {audio: true, video: true}
+      mediaConstraints: {audio: false, video: true}
     }
     this.peer = { connection: new RTCPeerConnection(this.config.rtcConfig) }
+    window.peer = this.peer
     this.requestUserMedia()
   }
 
@@ -160,7 +166,7 @@ export default class WebrtcController extends Controller {
   }
 
   /**
-   * User-Media Functions
+   * User-Media and Data Channel Functions
    */
   async requestUserMedia() {
     // https://developer.mozilla.org/en-US/docs/Web/API/MediaStream
@@ -183,10 +189,26 @@ export default class WebrtcController extends Controller {
     document.querySelector(selector, stream).srcObject = stream
   }
 
+  addChatChannel(peer) {
+    peer.chatChannel = peer.connection.createDataChannel("text_chat", {
+      negotiated: true, id: 50
+    })
+
+    peer.chatChannel.onmessage = (event) => {
+      this.appendMessage("peer", "#chat-log", event.data)
+    }
+
+    peer.chatChannel.onclose = (_event) => {
+      console.log("Chat channel closed")
+    }
+  }
+
   /**
    * Peer WebRTC Functions and Callbacks
    */
   registerRtcCallbacks(peer) {
+    peer.connection.ondatachannel = this.handleRtcDataChannel.bind(this)
+    peer.connection.onconnectionstatechange = this.handleRtcConnectionStateChange.bind(this)
     peer.connection.onnegotiationneeded = this.handleRtcConnectionNegotiation.bind(this)
     peer.connection.onicecandidate = this.handleRtcIceCandidate.bind(this)
     peer.connection.ontrack = this.handleRtcPeerTrack.bind(this)
@@ -213,12 +235,78 @@ export default class WebrtcController extends Controller {
     this.config.isMakingOffer = false
   }
 
+  handleRtcConnectionStateChange() {
+    const connectionState = this.peer.connection.connectionState
+    console.log(`The connection state is now ${connectionState}`)
+    document.querySelector("body").className = `connection-state-${connectionState}`
+  }
+
+  handleRtcDataChannel({ channel }) {
+    const label = channel.label
+    console.log(`Data channel added for ${label}`)
+
+    if (label.startsWith("filter-")) {
+      document.querySelector("#peer").className = label
+      channel.onopen = () => channel.close()
+    } else {
+      console.log(`Opened ${label} channel with an ID of ${channel.id}`)
+    }
+  }
+
   /**
    * Call Features & Reset Functions
    */
   establishCallFeatures(peer) {
     this.registerRtcCallbacks(peer)
+    this.addChatChannel(peer)
     this.addStreamingMedia(peer, this.stream)
+  }
+
+  /**
+   * Video Effect Functions
+   */
+
+  handleSelfVideo(event) {
+    if (this.peer.connection.connectionState !== "connected") return
+    const filterName = this.videoFx.cycleFilter()
+
+    const filterDataChannel = this.peer.connection.createDataChannel(`filter-${filterName}`)
+    filterDataChannel.onclose = () => {
+      console.log(`Remote peer has closed the ${filterName} data channel`)
+    }
+
+    event.currentTarget.className = `filter-${filterName}`
+  }
+
+  /**
+   * Chat-related Functions
+   */
+
+  handleMessageForm(event) {
+    event.preventDefault()
+    const input = document.getElementById("chat-msg")
+    const message = input.value
+
+    if (message === "") return
+
+    this.appendMessage("self", "#chat-log", message.trim())
+    this.peer.chatChannel.send(message)
+    input.value = ""
+  }
+
+  appendMessage(sender, logElement, message) {
+    const log = document.querySelector(logElement)
+    const li = document.createElement("li")
+    li.className = sender
+    li.textContent = message
+    log.appendChild(li)
+
+    if (log.scrollTo) {
+      log.scrollTo({
+        top: log.scrollHeight,
+        behavior: "smooth"
+      })
+    }
   }
 
   /**

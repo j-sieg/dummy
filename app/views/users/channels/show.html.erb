@@ -14,12 +14,26 @@
       data-webrtc-target="video"
       autoplay
       muted
-      playsinline>
+      playsinline
+      data-action="click->webrtc#handleSelfVideo"
+      >
     </video>
     <video id="peer"
       class="col m-2"
       autoplay
       playsinline>
     </video>
+
+    <aside id="chat">
+      <h2 class="preserve-access">Chat</h2>
+      <ol id="chat-log" style="max-height: 200px; overflow: scroll;"></ol>
+      <form id="chat-form" action="#null" data-action="submit->webrtc#handleMessageForm">
+        <label for="chat-msg" class="preserve-access form-label">Compose Message</label>
+        <div class="d-flex">
+          <input type="text" id="chat-msg" name="chat-msg" class="form-control" autocomplete="off" />
+          <button type="submit" id="chat-btn" class="btn btn-primary">Send</button>
+        </div>
+      </form>
+    </aside>
   </article>
 </div>
