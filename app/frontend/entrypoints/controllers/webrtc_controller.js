@@ -25,6 +25,7 @@ export default class WebrtcController extends Controller {
     this.peer = { connection: new RTCPeerConnection(this.config.rtcConfig) }
     window.peer = this.peer
     this.requestUserMedia()
+    this.messageQueue = []
   }
 
   async disconnect() {
@@ -198,6 +199,10 @@ export default class WebrtcController extends Controller {
       this.appendMessage("peer", "#chat-log", event.data)
     }
 
+    peer.chatChannel.onopen = (event) => {
+      this.sendQueuedMessagesAndFlush()
+    }
+
     peer.chatChannel.onclose = (_event) => {
       console.log("Chat channel closed")
     }
@@ -290,7 +295,18 @@ export default class WebrtcController extends Controller {
     if (message === "") return
 
     this.appendMessage("self", "#chat-log", message.trim())
-    this.peer.chatChannel.send(message)
+
+    if (this.peer.chatChannel && this.peer.chatChannel.readyState === "open") {
+      try {
+        this.peer.chatChannel.send(message)
+      } catch(exception) {
+        console.error("Error sending message:", e)
+        this.queueMessage()
+      }
+    } else {
+      this.queueMessage(message)
+    }
+
     input.value = ""
   }
 
@@ -307,6 +323,17 @@ export default class WebrtcController extends Controller {
         behavior: "smooth"
       })
     }
+  }
+
+  queueMessage(message) {
+    this.messageQueue.push(message)
+  }
+
+  sendQueuedMessagesAndFlush() {
+    for (let message of this.messageQueue) {
+      this.peer.chatChannel.send(message)
+    }
+    this.messageQueue = []
   }
 
   /**
