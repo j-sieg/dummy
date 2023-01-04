@@ -3,7 +3,12 @@ module Users
     include ConversationScoped
 
     def create
-      MessageCreator.new.create_message(@conversation, current_user, message_params)
+      result = MessageCreator.new.create_message(@conversation, current_user, message_params)
+      if result.created?
+        head :ok
+      else
+        head :unprocessable_entity
+      end
     end
 
     private
