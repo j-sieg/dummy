@@ -25,6 +25,8 @@ FileUtils.chdir APP_ROOT do
   log "Copying sample files"
   unless File.exist?("config/application.yml")
     FileUtils.cp "config/application.yml.sample", "config/application.yml"
+    log "Change the values for environment variables"
+    log "In config/application.yml"
   end
 
   log "Recreating the database"

@@ -1,24 +1,43 @@
 # README
+This is a dummy application where I try anything I'm interested in.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The code for other features are in branches.
 
-Things you may want to cover:
+These are branches I want you to take a look at:
+- `expenses-tracker` features a calendar (made with HTML table) where you can log your expenses.
+Dates with expenses are highlighted in the calendar and there is also a breakdown of expenses per month with its total
 
-* Ruby version
+- `gen-auth` is where I made the authentication system that's currently in `main`. It's a Ruby/Rails version of Elixir Phoenix's `gen.auth` or at least it tries to be.
+This is merged in main because almost everything needs an authentication system and I'd like this to be the default for any other stuff I'm trying out.
 
-* System dependencies
+- `webrtc` is where I'm trying to make something like Google Meet or Zoom. I'm following a [book](https://pragprog.com/titles/ksrtc/programming-webrtc/). The book uses Node and Socket.io but my implementation here uses Ruby and Rails w/ ActionCable.
 
-* Configuration
+- `chat-system` is basically a chat system. I'm in the middle of trying to implement read receipts.
 
-* Database creation
 
-* Database initialization
+## App prerequisites
+1. Install Ruby 3.1.0
+2. Install Postgres
+3. Install Node
 
-* How to run the test suite
+When running `chat-system` or `web-rtc` you'll have to install Redis.
 
-* Services (job queues, cache servers, search engines, etc.)
+## App setup
+```bash
+./bin/setup
+```
+This is a idempotent script which automates a lot of setup steps that you need to do:
+- Install Ruby dependencies
+- Set up `config/application.yml` that you **need to tweak** a little bit for your development environment (check the output as you run this script)
+- Recreate the development and test databases
+- Clear logs and temp files
+- Install JavaScript dependencies
 
-* Deployment instructions
 
-* ...
+## Running the app
+`./bin/dev`
+
+## Running tests
+All tests except system tests: `./bin/rails test`
+
+System tests: `./bin/rails test:system`
