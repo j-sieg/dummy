@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_24_141829) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_25_105040) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,7 +19,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_24_141829) do
     t.binary "token", null: false
     t.string "context", null: false
     t.string "sent_to"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["token", "context"], name: "index_user_tokens_on_token_and_context", unique: true
     t.index ["user_id"], name: "index_user_tokens_on_user_id"
   end
@@ -27,9 +27,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_24_141829) do
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "confirmed_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "confirmed_at", precision: nil, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
