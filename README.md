@@ -16,9 +16,9 @@ This is merged in main because almost everything needs an authentication system 
 
 
 ## App prerequisites
-1. Install Ruby 3.1.0
+1. Install Ruby 3.2.2
 2. Install Postgres
-3. Install Node
+3. Install Node 21.6.1
 
 When running `chat-system` or `web-rtc` you'll have to install Redis.
 
