@@ -14,7 +14,7 @@ module Users
         UserMailer.with(user: user, token: user_token.encoded_token).confirmation.deliver_later
 
         flash[:notice] = "You will receive email confirmation instructions in few minutes."
-        redirect_to login_url
+        redirect_to users_login_url
       else
         render :new, locals: {user: user}, status: :unprocessable_entity
       end

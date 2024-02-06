@@ -4,7 +4,7 @@
 
 <% if current_user %>
   <h1>Hello <%= current_user.email %></h1>
-  <%= link_to "Settings", settings_path %>
+  <%= link_to "Settings", users_settings_path %>
 <% else %>
-  <%= link_to "Log in", login_path %>
+  <%= link_to "Log in", users_login_path %>
 <% end %>

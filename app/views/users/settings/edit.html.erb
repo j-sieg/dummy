@@ -2,7 +2,7 @@
 
 <%= render "shared/flash_message" %>
 
-<%= form_with(url: user_request_email_update_path, method: :patch) do |form| %>
+<%= form_with(url: users_settings_request_email_update_path, method: :patch) do |form| %>
   <%= hidden_field_tag :change, "email" %>
   <%= form.email_field :email, value: current_user.email %>
   <% if error_message = local_assigns[:error_message] %>
@@ -22,7 +22,7 @@
       <% if (user_token.token == session[:user_token]) %>
         <p><strong>This is your current session</strong></p>
         <% else %>
-        <%= form_with(model: user_token, url: destroy_user_session_path(user_token), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
+        <%= form_with(model: user_token, url: users_destroy_session_path(user_token), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
           <%= form.submit "Delete" %>
         <% end %>
       <% end %>

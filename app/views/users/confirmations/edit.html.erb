@@ -1,5 +1,5 @@
 <h1>Account Confirmation</h1>
 
-<%= form_with(url: update_user_confirmation_path(@token), method: :patch) do |form| %>
+<%= form_with(url: users_confirmation_update_path(@token), method: :patch) do |form| %>
   <%= form.submit "Confirm my account" %>
 <% end %>

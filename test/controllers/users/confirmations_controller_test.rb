@@ -13,7 +13,7 @@ class Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_emails 1
-    assert_redirected_to login_url
+    assert_redirected_to users_login_url
     assert_equal \
       "If your email address exists in our database, you will receive an email with instructions on how to confirm your account in a few minutes.",
       flash[:notice]
@@ -25,7 +25,7 @@ class Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_emails 0
-    assert_redirected_to login_url
+    assert_redirected_to users_login_url
     assert_equal \
       "If your email address exists in our database, you will receive an email with instructions on how to confirm your account in a few minutes.",
       flash[:notice]
@@ -37,7 +37,7 @@ class Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_emails 0
-    assert_redirected_to login_url
+    assert_redirected_to users_login_url
     assert_equal \
       "If your email address exists in our database, you will receive an email with instructions on how to confirm your account in a few minutes.",
       flash[:notice]
@@ -47,16 +47,16 @@ class Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
     user = users(:unconfirmed)
     user_token = UserToken.create_confirmation_token!(user)
 
-    get edit_user_confirmation_url(user_token.encoded_token)
+    get users_confirmation_url(user_token.encoded_token)
     assert_response :success
   end
 
   test "#edit when a token is invalid" do
     user = users(:unconfirmed)
 
-    get edit_user_confirmation_url(token: "dummy token")
+    get users_confirmation_edit_url("dummy token")
     assert_equal "The link might have expired or is invalid.", flash[:alert]
-    assert_redirected_to login_url
+    assert_redirected_to users_login_url
   end
 
   test "#edit when a token has expired" do
@@ -64,9 +64,9 @@ class Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
     encoded_token = UserToken.create_confirmation_token!(user).encoded_token
 
     travel_to (3.days.from_now + 5.seconds) do
-      get edit_user_confirmation_url(token: encoded_token)
+      get users_confirmation_edit_url(token: encoded_token)
       assert_equal "The link might have expired or is invalid.", flash[:alert]
-      assert_redirected_to login_url
+      assert_redirected_to users_login_url
     end
   end
 
@@ -74,7 +74,7 @@ class Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
     user = users(:james)
     user_token = UserToken.create_confirmation_token!(user)
 
-    get edit_user_confirmation_url(token: user_token.encoded_token)
+    get users_confirmation_url(token: user_token.encoded_token)
     assert_response :success
   end
 
@@ -86,10 +86,10 @@ class Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
     refute user.confirmed_at?
 
     assert_difference "user.confirmation_tokens.count", -2 do
-      patch update_user_confirmation_url(user_token.encoded_token)
+      patch users_confirmation_update_url(user_token.encoded_token)
     end
 
-    assert_redirected_to login_url
+    assert_redirected_to users_login_url
     assert_equal "Successfully confirmed your account.", flash[:notice]
     assert user.reload.confirmed_at?
   end
@@ -99,10 +99,10 @@ class Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
     user_token = UserToken.create_confirmation_token!(user)
 
     assert_no_difference "user.confirmation_tokens.count" do
-      patch update_user_confirmation_url("invalid_token")
+      patch users_confirmation_update_url("invalid_token")
     end
 
-    assert_redirected_to login_url
+    assert_redirected_to users_login_url
     assert_equal "The link might have expired or is invalid.", flash[:alert]
     refute user.reload.confirmed_at?
   end
@@ -113,10 +113,10 @@ class Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
     user_token = UserToken.create_confirmation_token!(user)
 
     assert_difference "user.confirmation_tokens.count", -1 do
-      patch update_user_confirmation_url(user_token.encoded_token)
+      patch users_confirmation_update_url(user_token.encoded_token)
     end
 
-    assert_redirected_to login_url
+    assert_redirected_to users_login_url
     assert_equal "Successfully confirmed your account.", flash[:notice]
     assert_equal original_confirmed_at, user.reload.confirmed_at
   end

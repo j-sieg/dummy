@@ -21,7 +21,7 @@ module UserAuthentication
   def require_user_authentication!
     unless @current_user
       store_requested_url!
-      redirect_to login_url, alert: "You need to be logged in first.", status: :see_other
+      redirect_to users_login_url, alert: "You need to be logged in first.", status: :see_other
     end
   end
 
@@ -36,10 +36,10 @@ module UserAuthentication
   end
 
   def store_requested_url!
-    session[:stored_location] = request.url
+    session[:users_stored_location] = request.url
   end
 
   def stored_url
-    session.delete(:stored_location)
+    session.delete(:users_stored_location)
   end
 end

@@ -12,7 +12,7 @@ module Users
       end
 
       flash[:notice] = "If your email address exists in our database, you will receive an email with instructions on how to confirm your account in a few minutes."
-      redirect_to login_url
+      redirect_to users_login_url
     end
 
     def edit
@@ -23,7 +23,7 @@ module Users
       @user.confirmation_tokens.delete_all
 
       flash[:notice] = "Successfully confirmed your account."
-      redirect_to login_url
+      redirect_to users_login_url
     end
 
     private
@@ -33,7 +33,7 @@ module Users
 
       if @token.present? && !(@user = UserToken.find_user_by_confirmation_token(@token))
         flash[:alert] = "The link might have expired or is invalid."
-        redirect_to login_url
+        redirect_to users_login_url
       end
     end
   end

@@ -2,7 +2,7 @@
 
 <%= render "shared/flash_message" %>
 
-<%= form_with(url: login_path, method: :post) do |form| %>
+<%= form_with(url: users_login_path, method: :post) do |form| %>
   <div>
     <%= form.label :email %>
     <%= form.email_field :email %>
@@ -16,4 +16,4 @@
   <%= form.submit "Log in" %>
 <% end %>
 
-<p>Don't have an account yet? <%= link_to "Sign up", sign_up_url %></p>
+<p>Don't have an account yet? <%= link_to "Sign up", users_sign_up_url %></p>

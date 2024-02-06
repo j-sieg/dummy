@@ -18,18 +18,18 @@ module Users
         end
 
       if error_message
-        redirect_to settings_url, alert: error_message
+        redirect_to users_settings_url, alert: error_message
       else
         user_token = UserToken.create_change_email_token!(current_user, new_email)
         UserMailer.with(receiver_email: new_email, token: user_token.encoded_token).update_email.deliver_later
-        redirect_to settings_url, notice: "A link to confirm your email has been sent to the new address."
+        redirect_to users_settings_url, notice: "A link to confirm your email has been sent to the new address."
       end
     end
 
     def update_email
       current_user.update_column :email, @user_token.sent_to
       current_user.change_email_tokens.delete_all
-      redirect_to settings_url, notice: "Successfully changed your email."
+      redirect_to users_settings_url, notice: "Successfully changed your email."
     end
 
     private
@@ -39,7 +39,7 @@ module Users
       @user_token = UserToken.find_record_by_user_change_email_token(current_user, token)
 
       unless @user_token
-        redirect_to settings_url, alert: "The email change link is invalid or it has expired."
+        redirect_to users_settings_url, alert: "The email change link is invalid or it has expired."
       end
     end
   end

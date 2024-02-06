@@ -5,7 +5,7 @@ class Users::PasswordsControllerTest < ActionDispatch::IntegrationTest
     user = users(:james)
     user_log_in_as(user)
 
-    patch update_user_password_url, params: {
+    patch users_settings_passwords_url, params: {
       password: {
         current_password: "It's m3?",
         password: "n3w p4ssw0rd!",
@@ -13,7 +13,7 @@ class Users::PasswordsControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_redirected_to settings_url
+    assert_redirected_to users_settings_url
     assert_equal "Successfully changed your password.", flash[:notice]
   end
 
@@ -21,7 +21,7 @@ class Users::PasswordsControllerTest < ActionDispatch::IntegrationTest
     user = users(:james)
     user_log_in_as(user)
 
-    patch update_user_password_url, params: {
+    patch users_settings_passwords_url, params: {
       password: {
         current_password: "It's m3?",
         password: "n3w p4ssw0rd!",
@@ -29,7 +29,7 @@ class Users::PasswordsControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_redirected_to settings_url
+    assert_redirected_to users_settings_url
     assert_equal "Failed to change your password.", flash[:alert]
   end
 end

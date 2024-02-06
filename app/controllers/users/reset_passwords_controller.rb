@@ -14,7 +14,7 @@ module Users
       end
 
       flash[:notice] = "If your email address exists in our database, you will receive an email with instructions on how to reset your password in a few minutes."
-      redirect_to login_url
+      redirect_to users_login_url
     end
 
     def edit
@@ -24,7 +24,7 @@ module Users
       if @user.update(password_params)
         @user.tokens.delete_all
         flash[:notice] = "Successfully reset your password!"
-        redirect_to login_url
+        redirect_to users_login_url
       else
         render :edit, status: :unprocessable_entity
       end
@@ -37,7 +37,7 @@ module Users
 
       if @token.present? && !(@user = UserToken.find_user_by_reset_password_token(@token))
         flash[:alert] = "The link might have expired or is invalid."
-        redirect_to login_url
+        redirect_to users_login_url
       end
     end
 

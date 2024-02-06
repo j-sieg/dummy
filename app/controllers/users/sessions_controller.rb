@@ -24,12 +24,12 @@ module Users
         token = @current_user&.active_sessions&.find_by(id: token_id)&.destroy
         respond_to do |format|
           format.turbo_stream { render locals: {token: token} } if token
-          format.html { redirect_to settings_url, notice: "Successfully removed the session" }
+          format.html { redirect_to users_settings_url, notice: "Successfully removed the session" }
         end
       else
         @current_user&.active_sessions&.delete_all
         reset_session
-        redirect_to login_url, notice: "Logged out successfully."
+        redirect_to users_login_url, notice: "Logged out successfully."
       end
     end
   end

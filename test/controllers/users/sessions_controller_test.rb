@@ -2,7 +2,7 @@ require "test_helper"
 
 class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
   test "#new doesn't crash" do
-    get login_url
+    get users_login_url
     assert_response :success
   end
 
@@ -10,7 +10,7 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     user = users(:james)
     user_log_in_as(user)
 
-    get login_url
+    get users_login_url
     assert_equal "You are already logged in.", flash[:alert]
     assert_response :see_other
   end
@@ -19,7 +19,7 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     user = users(:james)
 
     assert_difference "UserToken.count" do
-      post login_url, params: {email: user.email, password: "It's m3?"}
+      post users_login_url, params: {email: user.email, password: "It's m3?"}
     end
 
     assert user_logged_in?(user)
@@ -29,14 +29,14 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "#create responds with :unprocessable_entity when invalid" do
     assert_no_difference "UserToken.count" do
-      post login_url, params: {email: "nobody@example.com", password: "it's m3?"}
+      post users_login_url, params: {email: "nobody@example.com", password: "it's m3?"}
     end
     assert_response :unprocessable_entity
     assert_equal "Invalid email/password.", flash[:alert]
 
     user = users(:james)
     assert_no_difference "UserToken.count" do
-      post login_url, params: {email: user.email, password: "WRONG PASSWORD"}
+      post users_login_url, params: {email: user.email, password: "WRONG PASSWORD"}
     end
     assert_response :unprocessable_entity
     assert_equal "Invalid email/password.", flash[:alert]
@@ -44,13 +44,13 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "#create redirects the user to the previously requested location" do
-    get settings_url
-    assert_redirected_to login_url
+    get users_settings_url
+    assert_redirected_to users_login_url
     assert_equal "You need to be logged in first.", flash[:alert]
 
     user = users(:james)
-    post login_url, params: {email: user.email, password: "It's m3?"}
-    assert_redirected_to settings_url
+    post users_login_url, params: {email: user.email, password: "It's m3?"}
+    assert_redirected_to users_settings_url
     assert_equal "Logged in successfully.", flash[:notice]
   end
 
@@ -58,7 +58,7 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     user = users(:unconfirmed)
 
     assert_no_difference "UserToken.count" do
-      post login_url, params: {email: user.email, password: "It's m3?"}
+      post users_login_url, params: {email: user.email, password: "It's m3?"}
     end
 
     assert_response :unprocessable_entity
@@ -72,9 +72,9 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     user_log_in_as(user)
 
     assert_difference "UserToken.count", -2 do
-      delete logout_url
+      delete users_logout_url
     end
-    assert_redirected_to login_url
+    assert_redirected_to users_login_url
     assert "Logged out successfully", flash[:notice]
   end
 
@@ -86,19 +86,19 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     token = user.reload.active_sessions.first
 
     assert_difference "UserToken.count", -1 do
-      delete destroy_user_session_url(token)
+      delete users_destroy_session_url(token)
     end
-    assert_redirected_to settings_url
+    assert_redirected_to users_settings_url
   end
 
   test "#destroy with a specific id doesn't crash even if the id doesn't exist" do
-    delete destroy_user_session_url(500_000)
-    assert_redirected_to settings_url
+    delete users_destroy_session_url(500_000)
+    assert_redirected_to users_settings_url
   end
 
   test "#destroy doesn't need a user to be logged in" do
-    delete logout_url
-    assert_redirected_to login_url
+    delete users_logout_url
+    assert_redirected_to users_login_url
     assert_equal "Logged out successfully.", flash[:notice]
   end
 end

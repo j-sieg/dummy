@@ -15,7 +15,7 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
 
   def user_log_in_as(user, password: "It's m3?")
-    post login_url, params: {email: user.email, password: "It's m3?"}
+    post users_login_url, params: {email: user.email, password: "It's m3?"}
   end
 
   def user_logged_in?(user, context = "session")
