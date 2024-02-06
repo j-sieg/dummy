@@ -7,7 +7,10 @@ class GenAuthGenerator < Rails::Generators::NamedBase
   end
 
   def create_controllers
+    template "controllers/application_controller.rb.erb", "app/controllers/#{plural_name}/application_controller.rb"
     template "controllers/registrations_controller.rb.erb", "app/controllers/#{plural_name}/registrations_controller.rb"
+    template "controllers/sessions_controller.rb.erb", "app/controllers/#{plural_name}/sessions_controller.rb"
+    template "controllers/passwords_controller.rb.erb", "app/controllers/#{plural_name}/passwords_controller.rb"
   end
 
   def create_models_migrations
