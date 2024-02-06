@@ -1,0 +1,57 @@
+require "test_helper"
+
+class <%= class_name.pluralize %>::SettingsControllerTest < ActionDispatch::IntegrationTest
+  test "#index requires <%= singular_name %> authentication" do
+    get <%= plural_name %>_settings_url
+    assert_redirected_to <%= plural_name %>_login_url
+  end
+
+  test "#index doesn't crash" do
+    <%= singular_name %> = <%= plural_name %>(:james)
+    <%= singular_name %>_log_in_as(<%= singular_name %>)
+
+    get <%= plural_name %>_settings_url
+    assert_response :success
+  end
+
+  test "requesting an email change" do
+    <%= singular_name %> = <%= plural_name %>(:james)
+    <%= singular_name %>_log_in_as(<%= singular_name %>)
+
+    assert_difference "<%= singular_name %>.tokens.count" do
+      patch <%= plural_name %>_settings_request_email_update_url, params: {email: "new@example.com"}
+    end
+
+    perform_enqueued_jobs
+    assert_emails 1
+  end
+
+  test "confirming an email change" do
+    <%= singular_name %> = <%= plural_name %>(:james)
+    old_email = <%= singular_name %>.email
+    <%= singular_name %>_token = <%= class_name %>Token.create_change_email_token!(<%= singular_name %>, "new@example.com")
+    assert_not_equal "new@example.com", old_email
+
+    <%= singular_name %>_log_in_as(<%= singular_name %>)
+    assert_difference "<%= singular_name %>.change_email_tokens.count", -1 do
+      get <%= plural_name %>_settings_update_email_url(<%= singular_name %>_token.encoded_token)
+    end
+
+    assert_redirected_to <%= plural_name %>_settings_url
+    assert_equal "Successfully changed your email.", flash[:notice]
+    assert_equal "new@example.com", <%= singular_name %>.reload.email
+  end
+
+  test "other <%= plural_name %> cannot use the change email token" do
+    other_<%= singular_name %> = <%= plural_name %>(:josh)
+    <%= singular_name %>_token = <%= class_name %>Token.create_change_email_token!(<%= plural_name %>(:james), "new@example.com")
+
+    <%= singular_name %>_log_in_as(other_<%= singular_name %>)
+    assert_no_difference "<%= class_name %>Token.count" do
+      get <%= plural_name %>_settings_update_email_url(<%= singular_name %>_token.encoded_token)
+    end
+
+    assert_redirected_to <%= plural_name %>_settings_url
+    assert_equal "The email change link is invalid or it has expired.", flash[:alert]
+  end
+end

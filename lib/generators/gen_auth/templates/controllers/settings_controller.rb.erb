@@ -1,0 +1,46 @@
+module <%= class_name.pluralize %>
+  class SettingsController < ApplicationController
+    before_action :find_change_email_token, only: [:update_email]
+
+    def edit
+      password = Password.new(has_secure_password: current_<%= singular_name %>)
+      render locals: {active_sessions: current_<%= singular_name %>.active_sessions, password: password}
+    end
+
+    def request_email_update
+      new_email = params[:email]
+
+      error_message =
+        if new_email == current_<%= singular_name %>.email
+          error_message = "That is already your email!"
+        elsif <%= class_name %>.where(email: new_email).exists?
+          error_message = "Email is already taken."
+        end
+
+      if error_message
+        redirect_to <%= plural_name %>_settings_url, alert: error_message
+      else
+        <%= singular_name %>_token = <%= class_name %>Token.create_change_email_token!(current_<%= singular_name %>, new_email)
+        <%= class_name %>Mailer.with(receiver_email: new_email, token: <%= singular_name %>_token.encoded_token).update_email.deliver_later
+        redirect_to <%= plural_name %>_settings_url, notice: "A link to confirm your email has been sent to the new address."
+      end
+    end
+
+    def update_email
+      current_<%= singular_name %>.update_column :email, @<%= singular_name %>_token.sent_to
+      current_<%= singular_name %>.change_email_tokens.delete_all
+      redirect_to <%= plural_name %>_settings_url, notice: "Successfully changed your email."
+    end
+
+    private
+
+    def find_change_email_token
+      token = params[:token]
+      @<%= singular_name %>_token = <%= class_name %>Token.find_record_by_<%= singular_name %>_change_email_token(current_<%= singular_name %>, token)
+
+      unless @<%= singular_name %>_token
+        redirect_to <%= plural_name %>_settings_url, alert: "The email change link is invalid or it has expired."
+      end
+    end
+  end
+end

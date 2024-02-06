@@ -1,0 +1,123 @@
+require "test_helper"
+
+class <%= class_name.pluralize %>::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
+  test "#new doesn't crash" do
+    get <%= plural_name %>_confirmation_url
+    assert_response :success
+  end
+
+  test "#create when the email is unconfirmed" do
+    unconfirmed_<%= singular_name %> = <%= plural_name %>(:unconfirmed)
+    perform_enqueued_jobs do
+      post <%= plural_name %>_confirmation_url, params: {email: <%= plural_name %>(:unconfirmed).email}
+    end
+
+    assert_emails 1
+    assert_redirected_to <%= plural_name %>_login_url
+    assert_equal \
+      "If your email address exists in our database, you will receive an email with instructions on how to confirm your account in a few minutes.",
+      flash[:notice]
+  end
+
+  test "#create when an email doesn't exist in the database" do
+    perform_enqueued_jobs do
+      post <%= plural_name %>_confirmation_url, params: {email: "invalid_email@example.com"}
+    end
+
+    assert_emails 0
+    assert_redirected_to <%= plural_name %>_login_url
+    assert_equal \
+      "If your email address exists in our database, you will receive an email with instructions on how to confirm your account in a few minutes.",
+      flash[:notice]
+  end
+
+  test "#create when the email is confirmed" do
+    perform_enqueued_jobs do
+      post <%= plural_name %>_confirmation_url, params: {email: <%= plural_name %>(:james).email}
+    end
+
+    assert_emails 0
+    assert_redirected_to <%= plural_name %>_login_url
+    assert_equal \
+      "If your email address exists in our database, you will receive an email with instructions on how to confirm your account in a few minutes.",
+      flash[:notice]
+  end
+
+  test "#edit with a valid token" do
+    <%= singular_name %> = <%= plural_name %>(:unconfirmed)
+    <%= singular_name %>_token = <%= class_name %>Token.create_confirmation_token!(<%= singular_name %>)
+
+    get <%= plural_name %>_confirmation_url(<%= singular_name %>_token.encoded_token)
+    assert_response :success
+  end
+
+  test "#edit when a token is invalid" do
+    <%= singular_name %> = <%= plural_name %>(:unconfirmed)
+
+    get <%= plural_name %>_confirmation_edit_url("dummy token")
+    assert_equal "The link might have expired or is invalid.", flash[:alert]
+    assert_redirected_to <%= plural_name %>_login_url
+  end
+
+  test "#edit when a token has expired" do
+    <%= singular_name %> = <%= plural_name %>(:unconfirmed)
+    encoded_token = <%= class_name %>Token.create_confirmation_token!(<%= singular_name %>).encoded_token
+
+    travel_to (3.days.from_now + 5.seconds) do
+      get <%= plural_name %>_confirmation_edit_url(token: encoded_token)
+      assert_equal "The link might have expired or is invalid.", flash[:alert]
+      assert_redirected_to <%= plural_name %>_login_url
+    end
+  end
+
+  test "#edit when a <%= singular_name %> is already confirmed" do
+    <%= singular_name %> = <%= plural_name %>(:james)
+    <%= singular_name %>_token = <%= class_name %>Token.create_confirmation_token!(<%= singular_name %>)
+
+    get <%= plural_name %>_confirmation_url(token: <%= singular_name %>_token.encoded_token)
+    assert_response :success
+  end
+
+  test "#update when the token is valid" do
+    <%= singular_name %> = <%= plural_name %>(:unconfirmed)
+    <%= singular_name %>_token = <%= class_name %>Token.create_confirmation_token!(<%= singular_name %>)
+    <%= singular_name %>_token = <%= class_name %>Token.create_confirmation_token!(<%= singular_name %>)
+
+    refute <%= singular_name %>.confirmed_at?
+
+    assert_difference "<%= singular_name %>.confirmation_tokens.count", -2 do
+      patch <%= plural_name %>_confirmation_update_url(<%= singular_name %>_token.encoded_token)
+    end
+
+    assert_redirected_to <%= plural_name %>_login_url
+    assert_equal "Successfully confirmed your account.", flash[:notice]
+    assert <%= singular_name %>.reload.confirmed_at?
+  end
+
+  test "#update when the token is invalid" do
+    <%= singular_name %> = <%= plural_name %>(:unconfirmed)
+    <%= singular_name %>_token = <%= class_name %>Token.create_confirmation_token!(<%= singular_name %>)
+
+    assert_no_difference "<%= singular_name %>.confirmation_tokens.count" do
+      patch <%= plural_name %>_confirmation_update_url("invalid_token")
+    end
+
+    assert_redirected_to <%= plural_name %>_login_url
+    assert_equal "The link might have expired or is invalid.", flash[:alert]
+    refute <%= singular_name %>.reload.confirmed_at?
+  end
+
+  test "#update when a <%= singular_name %> is already confirmed" do
+    <%= singular_name %> = <%= plural_name %>(:james)
+    original_confirmed_at = <%= singular_name %>.confirmed_at
+    <%= singular_name %>_token = <%= class_name %>Token.create_confirmation_token!(<%= singular_name %>)
+
+    assert_difference "<%= singular_name %>.confirmation_tokens.count", -1 do
+      patch <%= plural_name %>_confirmation_update_url(<%= singular_name %>_token.encoded_token)
+    end
+
+    assert_redirected_to <%= plural_name %>_login_url
+    assert_equal "Successfully confirmed your account.", flash[:notice]
+    assert_equal original_confirmed_at, <%= singular_name %>.reload.confirmed_at
+  end
+end

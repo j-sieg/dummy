@@ -1,0 +1,104 @@
+require "test_helper"
+
+class <%= class_name.pluralize %>::SessionsControllerTest < ActionDispatch::IntegrationTest
+  test "#new doesn't crash" do
+    get <%= plural_name %>_login_url
+    assert_response :success
+  end
+
+  test "#new redirects when the <%= singular_name %> is already logged in" do
+    <%= singular_name %> = <%= plural_name %>(:james)
+    <%= singular_name %>_log_in_as(<%= singular_name %>)
+
+    get <%= plural_name %>_login_url
+    assert_equal "You are already logged in.", flash[:alert]
+    assert_response :see_other
+  end
+
+  test "#create logs the <%= singular_name %> in" do
+    <%= singular_name %> = <%= plural_name %>(:james)
+
+    assert_difference "<%= class_name %>Token.count" do
+      post <%= plural_name %>_login_url, params: {email: <%= singular_name %>.email, password: "It's m3?"}
+    end
+
+    assert <%= singular_name %>_logged_in?(<%= singular_name %>)
+    assert_equal "Logged in successfully.", flash[:notice]
+    assert_redirected_to root_url
+  end
+
+  test "#create responds with :unprocessable_entity when invalid" do
+    assert_no_difference "<%= class_name %>Token.count" do
+      post <%= plural_name %>_login_url, params: {email: "nobody@example.com", password: "it's m3?"}
+    end
+    assert_response :unprocessable_entity
+    assert_equal "Invalid email/password.", flash[:alert]
+
+    <%= singular_name %> = <%= plural_name %>(:james)
+    assert_no_difference "<%= class_name %>Token.count" do
+      post <%= plural_name %>_login_url, params: {email: <%= singular_name %>.email, password: "WRONG PASSWORD"}
+    end
+    assert_response :unprocessable_entity
+    assert_equal "Invalid email/password.", flash[:alert]
+    refute <%= singular_name %>_logged_in?(<%= singular_name %>)
+  end
+
+  test "#create redirects the <%= singular_name %> to the previously requested location" do
+    get <%= plural_name %>_settings_url
+    assert_redirected_to <%= plural_name %>_login_url
+    assert_equal "You need to be logged in first.", flash[:alert]
+
+    <%= singular_name %> = <%= plural_name %>(:james)
+    post <%= plural_name %>_login_url, params: {email: <%= singular_name %>.email, password: "It's m3?"}
+    assert_redirected_to <%= plural_name %>_settings_url
+    assert_equal "Logged in successfully.", flash[:notice]
+  end
+
+  test "#create doesn't log in an unconfirmed <%= singular_name %>" do
+    <%= singular_name %> = <%= plural_name %>(:unconfirmed)
+
+    assert_no_difference "<%= class_name %>Token.count" do
+      post <%= plural_name %>_login_url, params: {email: <%= singular_name %>.email, password: "It's m3?"}
+    end
+
+    assert_response :unprocessable_entity
+    refute <%= singular_name %>_logged_in?(<%= singular_name %>)
+    assert_equal "Invalid email/password.", flash[:alert]
+  end
+
+  test "#destroy logs the <%= singular_name %> out of all sessions" do
+    <%= singular_name %> = <%= plural_name %>(:james)
+    <%= singular_name %>.tokens.create!(context: "session")
+    <%= singular_name %>_log_in_as(<%= singular_name %>)
+
+    assert_difference "<%= class_name %>Token.count", -2 do
+      delete <%= plural_name %>_logout_url
+    end
+    assert_redirected_to <%= plural_name %>_login_url
+    assert "Logged out successfully", flash[:notice]
+  end
+
+  test "#destroy with a specific id only deletes that session" do
+    <%= singular_name %> = <%= plural_name %>(:james)
+    <%= singular_name %>.tokens.create!(context: "session")
+
+    <%= singular_name %>_log_in_as(<%= singular_name %>)
+    token = <%= singular_name %>.reload.active_sessions.first
+
+    assert_difference "<%= class_name %>Token.count", -1 do
+      delete <%= plural_name %>_destroy_session_url(token)
+    end
+    assert_redirected_to <%= plural_name %>_settings_url
+  end
+
+  test "#destroy with a specific id doesn't crash even if the id doesn't exist" do
+    delete <%= plural_name %>_destroy_session_url(500_000)
+    assert_redirected_to <%= plural_name %>_settings_url
+  end
+
+  test "#destroy doesn't need a <%= singular_name %> to be logged in" do
+    delete <%= plural_name %>_logout_url
+    assert_redirected_to <%= plural_name %>_login_url
+    assert_equal "Logged out successfully.", flash[:notice]
+  end
+end
