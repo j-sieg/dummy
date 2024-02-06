@@ -18,6 +18,13 @@ class MessageCreator
     end
   end
 
+  # We assume that the user who recently sent a message
+  # has read all the messages in the conversation.
+  # Maybe this should be a trigger?
+  def delete_all_read_receipts(conversation, user)
+    conversation.message_receipts(user: user).delete_all
+  end
+
   class Result
     attr_reader :message
 

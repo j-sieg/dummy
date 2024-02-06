@@ -2,6 +2,9 @@ class Message < ApplicationRecord
   belongs_to :sender, class_name: "User"
   belongs_to :conversation
 
+  has_many :read_receipts, class_name: "Conversation::MessageReceipt"
+  has_many :readers, through: :read_receipts, class_name: "User", source: :user
+
   validates :body, presence: true
 
   def pakita

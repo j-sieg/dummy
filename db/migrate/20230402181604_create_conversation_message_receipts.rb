@@ -7,6 +7,13 @@ class CreateConversationMessageReceipts < ActiveRecord::Migration[7.0]
       t.datetime :read_at, null: false
     end
 
+    # 1. Create the *trigger function* `delete_previous_read_receipts`
+    # that deletes all previous read receipts by a user when a new
+    # one is created.
+    #
+    # 2. Create the *trigger* `delete_message_receipts` that calls the
+    # `delete_previous_read_receipts` *trigger function* after insertion
+    # of a new `conversation_message_receipts` row
     execute <<-SQL
       CREATE FUNCTION delete_previous_read_receipts() RETURNS TRIGGER AS $$
       BEGIN
