@@ -1,6 +1,0 @@
-module <%= class_name.pluralize %>
-  class ApplicationController < ::ApplicationController
-    # Base controller for any controller that requires a <%= class_name %> to be authenticated
-    before_action :require_<%= singular_name %>_authentication!
-  end
-end
