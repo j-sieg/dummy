@@ -29,7 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_25_105040) do
     t.string "password_digest"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.datetime "confirmed_at", precision: nil, null: false
+    t.datetime "confirmed_at", precision: nil
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
