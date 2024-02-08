@@ -14,18 +14,18 @@ module <%= class_name %>Authentication
 
   def authenticate_<%= singular_name %>
     if token = session[:<%= singular_name %>_token]
-      @current_<%= singular_name %> = <%= singular_name %>Token.find_<%= singular_name %>_by_session_token(token)
+      @current_<%= singular_name %> = <%= class_name %>Token.find_<%= singular_name %>_by_session_token(token)
     end
   end
 
   def require_<%= singular_name %>_authentication!
     unless @current_<%= singular_name %>
-      store_requested_url!
+      store_<%= singular_name %>_requested_url!
       redirect_to <%= plural_name %>_login_url, alert: "You need to be logged in first.", status: :see_other
     end
   end
 
-  def redirect_if_already_authenticated!
+  def redirect_<%= singular_name %>_if_already_authenticated!
     if @current_<%= singular_name %>
       redirect_to root_url, alert: "You are already logged in.", status: :see_other
     end
@@ -35,11 +35,11 @@ module <%= class_name %>Authentication
     @current_<%= singular_name %>.present?
   end
 
-  def store_requested_url!
+  def store_<%= singular_name %>_requested_url!
     session[:<%= plural_name %>_stored_location] = request.url
   end
 
-  def stored_url
+  def stored_<%= singular_name %>_url
     session.delete(:<%= plural_name %>_stored_location)
   end
 end

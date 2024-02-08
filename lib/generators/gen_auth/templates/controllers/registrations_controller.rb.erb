@@ -1,6 +1,7 @@
 module <%= class_name.pluralize %>
   class RegistrationsController < ::ApplicationController
-    before_action :redirect_if_already_authenticated!
+    skip_before_action :require_<%= singular_name %>_authentication!
+    before_action :redirect_<%= singular_name %>_if_already_authenticated!
 
     def new
       render locals: {<%= singular_name %>: <%= class_name %>.new}
