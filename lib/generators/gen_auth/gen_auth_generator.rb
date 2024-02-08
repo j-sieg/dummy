@@ -63,7 +63,7 @@ class GenAuthGenerator < Rails::Generators::NamedBase
   end
 
   def create_mailers
-    template "mailers/model_mailer.rb.erb", "app/models/mailers/#{singular_name}_mailer.rb"
+    template "mailers/model_mailer.rb.erb", "app/mailers/#{singular_name}_mailer.rb"
 
     Dir.glob("#{source_paths.first}/mailers/views/*.erb") do |file_path|
       file_name = File.basename(file_path)

@@ -1,4 +1,4 @@
-class <%= class_name %> Mailer < ApplicationMailer
+class <%= class_name %>Mailer < ApplicationMailer
   def reset_password
     @<%= singular_name %> = params[:<%= singular_name %>]
     @token = params[:token]
