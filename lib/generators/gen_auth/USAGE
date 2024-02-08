@@ -1,8 +1,23 @@
 Description:
-    Explain the generator
+    This generator will generate the code and tests for the resource you want
+    to authenticate with.
+
+    This is inspired by Elixir Phoenix's gen_auth.
+
+    Provides the following features:
+    - Registration System
+    - Session Authentication (log in and log out with database-backed tokens)
+    - Email Confirmation
+    - Email Changing
+    - Forgot your password?
+    - Reset your password
 
 Example:
-    bin/rails generate gen_auth Thing
+    bin/rails generate gen_auth Provider
 
     This will create:
-        what/will/it/create
+        Models, views, controllers, mailers, migrations, tests, and fixtures!
+
+    This will inject:
+        - New routes for the resource in config/routes.rb
+        - Monkey-patched methods in test/test_helper.rb

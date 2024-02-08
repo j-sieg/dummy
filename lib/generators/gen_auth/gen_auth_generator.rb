@@ -87,7 +87,7 @@ class GenAuthGenerator < Rails::Generators::NamedBase
 
     evaluated_routes_file_content = ERB.new(routes_file).result(binding)
 
-    inject_into_file "config/routes.rb", evaluated_routes_file_content, after: "Rails.application.routes.draw do\n"
+    inject_into_file Rails.root.join("config/routes.rb"), evaluated_routes_file_content, after: "Rails.application.routes.draw do\n"
   end
 
   def create_test_helper_methods
@@ -95,6 +95,6 @@ class GenAuthGenerator < Rails::Generators::NamedBase
     file_content = File.read(file_path)
     evaluated_file_content = ERB.new(file_content).result(binding)
 
-    append_to_file "test/test_helper.rb", evaluated_file_content
+    append_to_file Rails.root.join("test/test_helper.rb"), evaluated_file_content
   end
 end
