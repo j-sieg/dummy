@@ -76,4 +76,8 @@ class GenAuthGenerator < Rails::Generators::NamedBase
     template "tests/fixtures/model.yml.erb", "test/fixtures/#{plural_name}.yml"
     template "tests/fixtures/model_tokens.yml.erb", "test/fixtures/#{singular_name}_tokens.yml"
   end
+
+  def create_concerns
+    template "concerns/model_authentication.rb.erb", "app/controllers/concerns/#{singular_name}_authentication.rb"
+  end
 end

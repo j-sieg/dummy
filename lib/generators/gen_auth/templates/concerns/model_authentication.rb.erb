@@ -1,0 +1,45 @@
+module <%= class_name %>Authentication
+  extend ActiveSupport::Concern
+
+  included do
+    helper_method :current_<%= singular_name %>, :<%= singular_name %>_signed_in?
+    before_action :authenticate_<%= singular_name %>
+  end
+
+  private
+
+  def current_<%= singular_name %>
+    @current_<%= singular_name %>
+  end
+
+  def authenticate_<%= singular_name %>
+    if token = session[:<%= singular_name %>_token]
+      @current_<%= singular_name %> = <%= singular_name %>Token.find_<%= singular_name %>_by_session_token(token)
+    end
+  end
+
+  def require_<%= singular_name %>_authentication!
+    unless @current_<%= singular_name %>
+      store_requested_url!
+      redirect_to <%= plural_name %>_login_url, alert: "You need to be logged in first.", status: :see_other
+    end
+  end
+
+  def redirect_if_already_authenticated!
+    if @current_<%= singular_name %>
+      redirect_to root_url, alert: "You are already logged in.", status: :see_other
+    end
+  end
+
+  def <%= singular_name %>_signed_in?
+    @current_<%= singular_name %>.present?
+  end
+
+  def store_requested_url!
+    session[:<%= plural_name %>_stored_location] = request.url
+  end
+
+  def stored_url
+    session.delete(:<%= plural_name %>_stored_location)
+  end
+end
