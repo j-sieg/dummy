@@ -1,0 +1,14 @@
+
+
+### This is monkey-patching every test helper you need
+### for testing the newly generated <%= class_name %>
+class ActiveSupport::TestCase
+  def <%= singular_name %>_log_in_as(<%= singular_name %>, password: "It's m3?")
+    post <%= plural_name %>_login_url, params: {email: <%= singular_name %>.email, password: "It's m3?"}
+  end
+
+  def <%= singular_name %>_logged_in?(<%= singular_name %>, context = "session")
+    session_token = session[:<%= singular_name %>_token]
+    <%= singular_name %>.tokens.where(token: session_token, context: context).exists?
+  end
+end

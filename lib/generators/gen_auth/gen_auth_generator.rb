@@ -80,4 +80,21 @@ class GenAuthGenerator < Rails::Generators::NamedBase
   def create_concerns
     template "concerns/model_authentication.rb.erb", "app/controllers/concerns/#{singular_name}_authentication.rb"
   end
+
+  def create_routes
+    routes_file_path = source_paths.first + "/routes.rb.erb"
+    routes_file = File.read(routes_file_path)
+
+    evaluated_routes_file_content = ERB.new(routes_file).result(binding)
+
+    inject_into_file "config/routes.rb", evaluated_routes_file_content, after: "Rails.application.routes.draw do\n"
+  end
+
+  def create_test_helper_methods
+    file_path = source_paths.first + "/tests/test_helper.rb.erb"
+    file_content = File.read(file_path)
+    evaluated_file_content = ERB.new(file_content).result(binding)
+
+    append_to_file "test/test_helper.rb", evaluated_file_content
+  end
 end

@@ -1,6 +1,6 @@
-Rails.application.routes.draw do
-
-  namespace :users do
+  ### NEW ROUTES FOR <%= class_name %> AUTHENTICATION BELOW
+  ### Place this anywhere you like
+  namespace :<%= plural_name %> do
     # Registration
     get "/sign_up", to: "registrations#new"
     post "/sign_up", to: "registrations#create"
@@ -32,6 +32,4 @@ Rails.application.routes.draw do
     # Change passwords
     patch "/settings/passwords", to: "passwords#update"
   end
-
-  root "root#index"
-end
+  ### NEW ROUTES FOR <%= class_name %> AUTHENTICATION END HERE
