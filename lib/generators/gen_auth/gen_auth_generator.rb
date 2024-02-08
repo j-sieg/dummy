@@ -40,12 +40,6 @@ class GenAuthGenerator < Rails::Generators::NamedBase
   def create_models_migrations
     migration_template "migrations/create_gen_auth_tables.rb.erb", "db/migrate/create_gen_auth_#{singular_name}_tables.rb"
   end
-
-  def create_views
-  end
-
-  # TODO:
-  # Views
   # Routes
   # Mailers
 
@@ -57,5 +51,29 @@ class GenAuthGenerator < Rails::Generators::NamedBase
   def create_model_tests
     template "tests/models/model_test.rb.erb", "test/models/#{singular_name}_test.rb"
     template "tests/models/model_token_test.rb.erb", "test/models/#{singular_name}_token_test.rb"
+  end
+
+  def create_views
+    Dir.glob("#{source_paths.first}/views/**/*.erb") do |file_path|
+      folder_name, file_name = file_path.sub("#{source_paths.first}/views/", "").split("/")
+      relative_path = file_path.sub("#{source_paths.first}/views/", "")
+
+      template "views/#{relative_path}", "app/views/#{plural_name}/#{folder_name}/#{file_name}"
+    end
+  end
+
+  def create_mailers
+    template "mailers/model_mailer.rb.erb", "app/models/mailers/#{singular_name}_mailer.rb"
+
+    Dir.glob("#{source_paths.first}/mailers/views/*.erb") do |file_path|
+      file_name = File.basename(file_path)
+
+      template "mailers/views/#{file_name}", "app/views/#{singular_name}_mailer/#{file_name}"
+    end
+  end
+
+  def create_fixtures
+    template "test/fixtures/model.yml.erb", "test/fixtures/#{plural_name}.yml"
+    template "test/fixtures/model_tokens.yml.erb", "test/fixtures/#{singular_name}_tokens.yml"
   end
 end

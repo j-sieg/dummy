@@ -1,0 +1,6 @@
+<h1>Send me confirmation instructions</h1>
+
+<%%= form_with(url: <%= plural_name %>_confirmation_path, method: :post) do |form| %>
+  <%%= form.email_field :email %>
+  <%%= form.submit %>
+<%% end %>

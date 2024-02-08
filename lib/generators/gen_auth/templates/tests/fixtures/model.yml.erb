@@ -1,0 +1,16 @@
+DEFAULTS: &DEFAULTS
+  password_digest: <%%= BCrypt::Password.create("It's m3?") %>
+
+unconfirmed:
+  <<: *DEFAULTS
+  email: unconfirmed@example.com
+
+james:
+  <<: *DEFAULTS
+  email: james@example.com
+  confirmed_at: <%%= 3.months.ago %>
+
+josh:
+  <<: *DEFAULTS
+  email: josh@example.com
+  confirmed_at: <%%= 3.months.ago %>

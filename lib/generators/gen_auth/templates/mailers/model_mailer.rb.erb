@@ -1,0 +1,19 @@
+class <%= class_name %> Mailer < ApplicationMailer
+  def reset_password
+    @<%= singular_name %> = params[:<%= singular_name %>]
+    @token = params[:token]
+    mail(to: @<%= singular_name %>.email, subject: "Reset your password")
+  end
+
+  def confirmation
+    @<%= singular_name %> = params[:<%= singular_name %>]
+    @token = params[:token]
+    mail(to: @<%= singular_name %>.email, subject: "Confirm your account")
+  end
+
+  def update_email
+    @receiver_email = params[:receiver_email]
+    @token = params[:token]
+    mail(to: @receiver_email, subject: "Update your email")
+  end
+end

@@ -1,0 +1,31 @@
+<h1>Here lies <%%= current_<%= singular_name %>.email %>'s settings</h1>
+
+<%%= render "shared/flash_message" %>
+
+<%%= form_with(url: <%= plural_name %>_settings_request_email_update_path, method: :patch) do |form| %>
+  <%%= hidden_field_tag :change, "email" %>
+  <%%= form.email_field :email, value: current_<%= singular_name %>.email %>
+  <%% if error_message = local_assigns[:error_message] %>
+    <p class="text-danger"><%%= error_message %></p>
+  <%% end %>
+  <%%= form.submit "Update" %>
+<%% end %>
+
+<%%= render partial: "<%= plural_name %>/passwords/form", locals: {password: password} %>
+
+<h2>All your active sessions</h2>
+<p>BTW, logging out of your account logs you out of all your sessions.</p>
+<ul>
+  <%% active_sessions.each do |<%= singular_name %>_token| %>
+    <li id="<%%= dom_id(<%= singular_name %>_token) %>">
+      <%%= <%= singular_name %>_token.created_at %>
+      <%% if (<%= singular_name %>_token.token == session[:<%= singular_name %>_token]) %>
+        <p><strong>This is your current session</strong></p>
+        <%% else %>
+        <%%= form_with(model: <%= singular_name %>_token, url: <%= plural_name %>_destroy_session_path(<%= singular_name %>_token), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
+          <%%= form.submit "Delete" %>
+        <%% end %>
+      <%% end %>
+    </li>
+  <%% end %>
+</ul>

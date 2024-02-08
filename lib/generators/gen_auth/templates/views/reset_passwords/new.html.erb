@@ -1,0 +1,6 @@
+<h1>Forgot your password?</h1>
+
+<%%= form_with(url: <%= plural_name %>_forgot_my_password_path, method: :post) do |form| %>
+  <%%= form.email_field :email, autocomplete: "off" %>
+  <%%= form.submit "Send me reset instructions" %>
+<%% end %>
