@@ -1,5 +1,5 @@
 module <%= class_name.pluralize %>
-  class ConfirmationsController < ::ApplicationController
+  class ConfirmationsController < ApplicationController
     skip_before_action :require_<%= singular_name %>_authentication!
     before_action :find_<%= singular_name %>_by_confirmation_token, only: [:edit, :update]
 

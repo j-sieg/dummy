@@ -1,5 +1,5 @@
 module <%= class_name.pluralize %>
-  class RegistrationsController < ::ApplicationController
+  class RegistrationsController < ApplicationController
     skip_before_action :require_<%= singular_name %>_authentication!
     before_action :redirect_<%= singular_name %>_if_already_authenticated!
 

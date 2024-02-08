@@ -1,7 +1,7 @@
 module <%= class_name.pluralize %>
   class SessionsController < ::ApplicationController
     include <%= class_name %>Authentication
-    before_action :redirect_if_already_authenticated!, only: [:new, :create]
+    before_action :redirect_<%= singular_name %>_if_already_authenticated!, only: [:new, :create]
 
     def new
     end
