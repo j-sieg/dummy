@@ -15,6 +15,7 @@ test:
 
 production:
   <<: *default
+  host: <%= ENV["DB_HOST"] %>
   database: ezapp_production
   username: ezapp
   password: <%= ENV["POSTGRES_PASSWORD"] %>

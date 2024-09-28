@@ -25,6 +25,7 @@ env:
   clear:
     RAILS_ENV: production
     RACK_ENV: production
+    DB_HOST: 128.199.151.24
   secret:
     - RAILS_MASTER_KEY
     - POSTGRES_PASSWORD
@@ -38,7 +39,6 @@ accessories:
   db:
     image: postgres:16.0
     host: 128.199.151.24
-    port: 5432
     env:
       clear:
         POSTGRES_USER: ezapp
