@@ -9,6 +9,9 @@ servers:
   web:
     - 128.199.151.24
 
+proxy:
+  app_port: 3000
+
 # Credentials for your image host.
 registry:
   username: thesiegmeister
