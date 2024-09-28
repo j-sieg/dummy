@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
 
+  # Health check
+  get "/up", to: "application#up"
+
   scope module: "users" do
     # Registration
     get "/sign_up", to: "registrations#new"
