@@ -2,7 +2,7 @@
 service: dummy
 
 # Name of the container image.
-image: the-siegmeister/dummy-kamal
+image: thesiegmeister/dummy-kamal
 
 # Deploy to these servers.
 servers:
@@ -11,7 +11,7 @@ servers:
 
 # Credentials for your image host.
 registry:
-  username: the-siegmeister
+  username: thesiegmeister
   password:
     - KAMAL_REGISTRY_PASSWORD
 
