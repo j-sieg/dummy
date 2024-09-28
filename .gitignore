@@ -30,6 +30,9 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
+# Ignore the production 'master.key'
+/config/credentials/production.key
+
 # Vite Ruby
 /public/vite
 /public/vite-dev

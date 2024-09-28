@@ -1,0 +1,51 @@
+# Name of your application. Used to uniquely configure containers.
+service: dummy
+
+# Name of the container image.
+image: the-siegmeister/dummy-kamal
+
+# Deploy to these servers.
+servers:
+  web:
+    - 128.199.151.24
+
+# Credentials for your image host.
+registry:
+  username: the-siegmeister
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Configure builder setup.
+builder:
+  arch: amd64
+
+# Inject ENV variables into containers (secrets come from .kamal/secrets).
+#
+env:
+  clear:
+    RAILS_ENV: production
+    RACK_ENV: production
+    DB_HOST: 128.199.151.24
+  secret:
+    - RAILS_MASTER_KEY
+    - POSTGRES_PASSWORD
+
+# Use a different ssh user than root
+#
+# ssh:
+#   user: app
+
+accessories:
+  db:
+    image: postgres:16.0
+    host: 128.199.151.24
+    env:
+      clear:
+        POSTGRES_USER: ezapp
+        POSTGRES_DB: ezapp_production
+      secret:
+        - POSTGRES_PASSWORD
+    files:
+      - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
+    directories:
+      - data:/var/lib/postgresql/data
