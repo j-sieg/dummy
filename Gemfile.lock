@@ -127,6 +127,8 @@ GEM
     debug (1.5.0)
       irb (>= 1.3.6)
       reline (>= 0.2.7)
+    dockerfile-rails (1.6.20)
+      rails (>= 3.0.0)
     drb (2.2.1)
     dry-cli (1.0.0)
     erubi (1.12.0)
@@ -250,6 +252,7 @@ DEPENDENCIES
   bootsnap
   capybara
   debug
+  dockerfile-rails (>= 1.6)
   figaro
   pg (~> 1.1)
   puma (~> 5.0)
