@@ -39,9 +39,8 @@ env:
     - POSTGRES_PASSWORD
 
 # Use a different ssh user than root
-#
-# ssh:
-#   user: app
+ssh:
+  user: deploy
 
 accessories:
   db:
