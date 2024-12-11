@@ -32,10 +32,9 @@ env:
     RAILS_ENV: production
     RAILS_SERVE_STATIC_FILES: true
     RACK_ENV: production
-    DB_HOST: 128.199.151.24
   secret:
     - RAILS_MASTER_KEY
-    - POSTGRES_PASSWORD
+    - DATABASE_URL
 
 # Use a different ssh user than root
 ssh:
