@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get "/up", to: "application#up"
 
   scope module: "users" do
-    resources :daily_expenses
+    resources :expenses, only: [:index, :create, :destroy]
     resources :monthly_expenses_breakdown, only: [:show], param: :date
 
     ### CUSTOM AUTHENTICATION ROUTES BELOW

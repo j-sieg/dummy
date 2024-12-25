@@ -1,0 +1,44 @@
+module Users
+  class ExpensesController < ApplicationController
+    before_action :set_date_viewed
+
+    def index
+      new_expense = current_user.expenses.new
+      date_scoped_expenses = current_user.expenses.where(date: @date_viewed)
+      dates_with_expenses = MonthlyExpenses.new(user: current_user, date: @date_viewed).dates_with_expenses
+
+      render locals: {date_scoped_expenses:, new_expense:, dates_with_expenses:}
+    end
+
+    def create
+      expense = current_user.expenses.new(expense_params)
+
+      if expense.save
+        redirect_to expenses_url(date: expense.date), notice: "Logged"
+      else
+        redirect_to expenses_url(date: expense.date), alert: "Failed to log the expense"
+      end
+    end
+
+    def destroy
+      expense = current_user.expenses.find(params[:id])
+      expense.destroy!
+      respond_to do |format|
+        format.turbo_stream { render locals: {expense: expense} }
+        format.html { redirect_to expenses_url, notice: "Successfully delete the expense" }
+      end
+    end
+
+    private
+
+    def expense_params
+      params.require(:expense).permit(:date, :purpose, :amount)
+    end
+
+    def set_date_viewed
+      @date_viewed = Date.parse(params[:date])
+    rescue
+      @date_viewed = Date.current
+    end
+  end
+end

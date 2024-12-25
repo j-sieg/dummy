@@ -3,7 +3,8 @@
 class User < ApplicationRecord
   has_secure_password
   has_many :tokens, class_name: "UserToken", dependent: :delete_all
-  has_many :daily_expenses, dependent: :destroy
+
+  has_many :expenses, dependent: :destroy
 
   validates :email, uniqueness: true
   validates :password, presence: true, length: (8..72)

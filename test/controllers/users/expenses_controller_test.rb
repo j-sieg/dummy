@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Users::DailyExpensesControllerTest < ActionDispatch::IntegrationTest
+class Users::ExpensesControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

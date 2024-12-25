@@ -7,15 +7,15 @@ class MonthlyExpenses
   end
 
   def dates_with_expenses
-    user.daily_expenses.where(date: date_range).pluck(:date).uniq
+    user.expenses.where(date: date_range).select(:date).distinct.pluck(:date)
   end
 
   def daily_expenses
-    user.daily_expenses.where(date: date_range)
+    user.expenses.where(date: date_range)
   end
 
   def total_for_month
-    user.daily_expenses.where(date: date_range).sum(:amount) / 100.0
+    user.expenses.where(date: date_range).sum(:amount) / 100.0
   end
 
   def no_expenses_this_month?

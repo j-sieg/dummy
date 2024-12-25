@@ -8,7 +8,7 @@ module Users
       @monthly_expenses = MonthlyExpenses.new(user: current_user, date: date)
       render locals: {
         date: date,
-        daily_expenses: @monthly_expenses.daily_expenses,
+        expenses: @monthly_expenses.daily_expenses,
         total_for_month: @monthly_expenses.total_for_month
       }
     end

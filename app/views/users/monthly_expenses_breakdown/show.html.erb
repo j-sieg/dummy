@@ -1,14 +1,14 @@
 <% if @monthly_expenses.no_expenses_this_month? %>
   <article>
     <h1>Congrats! You didn't spend a dime for the<br />whole month of <%= month_and_year_for_date(date) %>.</h1>
-    <%= link_to daily_expenses_path(date: date) do %>
+    <%= link_to expenses_path(date: date) do %>
       <span>&#8592; Daily Expenses</span>
     <% end %>
   </article>
 <% else %>
   <h1>Breakdown for <%= month_and_year_for_date(date) %></h1>
 
-  <%= link_to daily_expenses_path(date: date) do %>
+  <%= link_to expenses_path(date: date) do %>
     <span>&#8592; Daily Expenses</span>
   <% end %>
 
@@ -22,11 +22,11 @@
         </tr>
       </thead>
       <tbody>
-        <% daily_expenses.each do |daily_expense| %>
+        <% expenses.each do |expense| %>
           <tr>
-            <td><%= number_to_pesos(daily_expense.amount_from_cents) %></td>
-            <td><%= daily_expense.purpose %></td>
-            <td><%= daily_expense.date %></td>
+            <td><%= number_to_pesos(expense.amount_from_cents) %></td>
+            <td><%= expense.purpose %></td>
+            <td><%= expense.date %></td>
           </tr>
         <% end %>
         <tr>

@@ -3,12 +3,12 @@
   <div class="col-md-4">
     <%= link_to "Breakdown for #{@date_viewed.strftime("%B")}", monthly_expenses_breakdown_path(@date_viewed), class: "btn btn-sm btn-primary mb-2 text-white" %>
     <div data-controller="calendar" class="table-responsive">
-      <%= calendar(date: @date_viewed, marked_dates: dates_with_expenses, path_method: :daily_expenses_path) %>
+      <%= calendar(date: @date_viewed, marked_dates: dates_with_expenses, path_method: :expenses_path) %>
     </div>
   </div>
   <div class="col-md-8 border border-dark">
     <h2 class="fs-4 mt-2">Log an expense</h2>
-    <%= form_with(model: daily_expense) do |form| %>
+    <%= form_with(model: new_expense, url: expenses_path, method: :post) do |form| %>
       <%= form.hidden_field :date, value: @date_viewed %>
       <div class="mb-2">
         <%= form.label :purpose, class: "form-label" %>
@@ -25,21 +25,21 @@
 
 <hr />
 
-<% if daily_expenses.size < 1 %>
+<% if date_scoped_expenses.size < 1 %>
   <article>
     <h1>No Expenses for <%= month_day_year_for_date(@date_viewed) %><h1>
   </article>
 <% else %>
   <article>
     <h1>Expenses for <%= month_day_year_for_date(@date_viewed) %></h1>
-    <% daily_expenses.each do |daily_expense| %>
-      <section id="<%= dom_id(daily_expense) %>" class="border border-dark p-2 mb-2">
+    <% date_scoped_expenses.each do |expense| %>
+      <section id="<%= dom_id(expense) %>" class="border border-dark p-2 mb-2">
         <p class="p-0 m-0">
-          Purpose: <%= daily_expense.purpose %>
+          Purpose: <%= expense.purpose %>
           <br />
-          Amount: <%= number_to_pesos(daily_expense.amount_from_cents) %>
+          Amount: <%= number_to_pesos(expense.amount_from_cents) %>
         </p>
-        <%= form_with(model: daily_expense, url: daily_expense_path(daily_expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
+        <%= form_with(model: expense, url: expense_path(expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
           <%= form.submit "Delete" %>
         <% end %>
       </section>
