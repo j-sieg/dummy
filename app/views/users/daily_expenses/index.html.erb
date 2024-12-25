@@ -33,12 +33,15 @@
   <article>
     <h1>Expenses for <%= month_day_year_for_date(@date_viewed) %></h1>
     <% daily_expenses.each do |daily_expense| %>
-      <section class="border border-dark p-2 mb-2">
+      <section id="<%= dom_id(daily_expense) %>" class="border border-dark p-2 mb-2">
         <p class="p-0 m-0">
           Purpose: <%= daily_expense.purpose %>
           <br />
           Amount: <%= number_to_pesos(daily_expense.amount_from_cents) %>
         </p>
+        <%= form_with(model: daily_expense, url: daily_expense_path(daily_expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
+          <%= form.submit "Delete" %>
+        <% end %>
       </section>
     <% end %>
   </article>

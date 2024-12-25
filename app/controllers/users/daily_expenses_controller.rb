@@ -20,6 +20,15 @@ module Users
       end
     end
 
+    def destroy
+      daily_expense = current_user.daily_expenses.find(params[:id])
+      daily_expense.destroy!
+      respond_to do |format|
+        format.turbo_stream { render locals: {daily_expense: daily_expense} }
+        format.html { redirect_to daily_expenses_url, notice: "Successfully delete the expense" }
+      end
+    end
+
     private
 
     def daily_expense_params
