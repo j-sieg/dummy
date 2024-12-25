@@ -5,7 +5,10 @@ module Users
     def index
       new_expense = current_user.expenses.new
       date_scoped_expenses = current_user.expenses.where(date: @date_viewed)
-      dates_with_expenses = MonthlyExpenses.new(user: current_user, date: @date_viewed).dates_with_expenses
+
+      obj = MonthlyExpenses.new(user: current_user, date: @date_viewed)
+      obj.maybe_create_monthly_expenses
+      dates_with_expenses = obj.dates_with_expenses
 
       render locals: {date_scoped_expenses:, new_expense:, dates_with_expenses:}
     end
@@ -32,7 +35,7 @@ module Users
     private
 
     def expense_params
-      params.require(:expense).permit(:date, :purpose, :amount)
+      params.require(:expense).permit(:date, :purpose, :amount, :recurring)
     end
 
     def set_date_viewed

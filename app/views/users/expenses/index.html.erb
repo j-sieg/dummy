@@ -18,6 +18,10 @@
         <%= form.label :amount, class: "form-label" %>
         <%= form.number_field :amount, class: "form-control", step: "0.01" %>
       </div>
+      <div class="mb-2">
+        <%= form.label :recurring, "Recurring (optional)", class: "form-label" %>
+        <%= form.select :recurring, Expense.recurrings.transform_keys(&:capitalize), {include_blank: true}, {class: "form-select"} %>
+      </div>
       <%= form.submit "Log", class: "btn btn-primary text-white" %>
     <% end %>
   </div>

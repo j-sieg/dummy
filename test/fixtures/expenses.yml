@@ -11,9 +11,17 @@ august_wifi:
   date: "2022-08-17"
   purpose: wifi
   amount: 180_000
+  recurring: monthly
 
 august_donation:
   user: james
   date: "2022-08-17"
   purpose: donation
   amount: 500_000
+
+august_electricity:
+  user: james
+  date: "2022-08-30"
+  purpose: Electricity
+  amount: 1_000_000
+  recurring: monthly
