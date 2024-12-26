@@ -6,13 +6,12 @@
     <% end %>
   </article>
 <% else %>
-  <h1>Breakdown for <%= month_and_year_for_date(date) %></h1>
-
-  <%= link_to expenses_path(date: date) do %>
+  <%= link_to expenses_path(date: date), class: "d-block mb-2" do %>
     <span>&#8592; Expenses</span>
   <% end %>
 
-  <h2>Miscellaneous</h2>
+  <h1>Breakdown for <%= month_and_year_for_date(date) %></h1>
+
   <div class="table-responsive">
     <table class="table">
       <thead>

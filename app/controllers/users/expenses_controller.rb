@@ -23,6 +23,18 @@ module Users
       end
     end
 
+    def edit
+      expense = current_user.expenses.recurring.find(params[:id])
+      render locals: {expense: expense}
+    end
+
+    def update
+      expense = current_user.expenses.recurring.find(params[:id])
+
+      expense.update(update_params)
+      render locals: {expense: expense}
+    end
+
     def destroy
       expense = current_user.expenses.find(params[:id])
       expense.destroy!
@@ -36,6 +48,10 @@ module Users
 
     def expense_params
       params.require(:expense).permit(:date, :purpose, :amount, :recurring)
+    end
+
+    def update_params
+      params.require(:expense).permit(:amount)
     end
 
     def set_date_viewed

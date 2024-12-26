@@ -34,19 +34,10 @@
     <h1>No Expenses for <%= month_day_year_for_date(@date_viewed) %><h1>
   </article>
 <% else %>
-  <article>
+  <section>
     <h1>Expenses for <%= month_day_year_for_date(@date_viewed) %></h1>
     <% date_scoped_expenses.each do |expense| %>
-      <section id="<%= dom_id(expense) %>" class="border border-dark p-2 mb-2">
-        <p class="p-0 m-0">
-          Purpose: <%= expense.purpose %>
-          <br />
-          Amount: <%= number_to_pesos(expense.amount_from_cents) %>
-        </p>
-        <%= form_with(model: expense, url: expense_path(expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
-          <%= form.submit "Delete" %>
-        <% end %>
-      </section>
+      <%= render partial: "expense", locals: {expense: expense} %>
     <% end %>
-  </article>
+  </section>
 <% end %>

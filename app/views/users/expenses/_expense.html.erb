@@ -1,0 +1,27 @@
+<%= turbo_frame_tag dom_id(expense) do %>
+  <article class="border border-dark p-2 mb-2">
+    <p class="p-0 m-0 mb-2">
+      Purpose: <%= expense.purpose %>
+      <br />
+      Amount: <%= number_to_pesos(expense.amount_from_cents) %>
+    </p>
+
+    <% if expense.errors.any? %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <% expense.errors.full_messages.each do |error_msg| %>
+          <%= error_msg %> <br />
+        <% end %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
+
+    <div class="d-flex">
+      <% if expense.recurring %>
+        <%= link_to "Edit", edit_expense_path(expense), class: "btn btn-sm btn-secondary me-2" %>
+      <% end %>
+      <%= form_with(model: expense, url: expense_path(expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
+        <%= form.submit "Delete", class: "btn btn-sm btn-danger" %>
+      <% end %>
+    </div>
+  </article>
+<% end %>

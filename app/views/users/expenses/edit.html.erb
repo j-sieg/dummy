@@ -1,0 +1,22 @@
+<%= turbo_frame_tag dom_id(expense) do %>
+  <article class="border border-dark p-2 mb-2">
+    <p class="p-0 m-0">
+      Purpose: <%= expense.purpose %>
+    </p>
+
+    <%= form_with(id: dom_id(expense, :edit), model: expense, method: :put, url: expense_path(expense), data: {turbo_frame: "navigation"}) do |form| %>
+      <div class="mb-2">
+        <%= form.label :amount, class: "form-label" %>
+        <%= form.number_field :amount, value: expense.amount_from_cents, class: "form-control", step: "0.01" %>
+      </div>
+    <% end %>
+    <div class="d-flex">
+      <%= button_tag(form: dom_id(expense, :edit), type: :submit, class: "btn btn-sm btn-secondary me-2") do %>
+        Update
+      <% end %>
+      <%= form_with(model: expense, url: expense_path(expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
+        <%= form.submit "Delete", class: "btn btn-sm btn-danger" %>
+      <% end %>
+    </div>
+  </article>
+<% end %>
