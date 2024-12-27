@@ -18,8 +18,12 @@
     <div class="d-flex">
       <% if expense.recurring %>
         <%= link_to "Edit", edit_expense_path(expense), class: "btn btn-sm btn-secondary me-2" %>
+        <%= link_to "Delete", expense_destroy_path(expense), class: "btn btn-sm btn-danger" %>
+      <% else %>
+        <%= form_with(model: expense, url: expense_path(expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
+          <%= button_tag "Delete", type: "submit", name: "destroy_option", value: :this_instance, class: "btn btn-sm btn-danger" %>
+        <% end %>
       <% end %>
-      <%= link_to "Delete", expense_destroy_path(expense), class: "btn btn-sm btn-danger" %>
     </div>
   </article>
 <% end %>
