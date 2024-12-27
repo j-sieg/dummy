@@ -1,4 +1,4 @@
-class MonthlyExpenses
+class ExpensesBreakdown
   attr_reader :user, :date
 
   def initialize(user:, date: Date.current)
@@ -7,23 +7,23 @@ class MonthlyExpenses
   end
 
   def dates_with_expenses
-    user.expenses.where(date: date_range).select(:date).distinct.pluck(:date)
+    scoped_expenses.select(:date).distinct.pluck(:date)
   end
 
   def daily_expenses
-    user.expenses.where(date: date_range)
+    scoped_expenses
   end
 
   def misc_total
-    user.expenses.where(date: date_range, recurring: nil).sum(:amount) / 100.0
+    scoped_expenses.where(recurring: nil).sum(:amount) / 100.0
   end
 
   def monthly_recurring_total
-    user.expenses.where(date: date_range).monthly.sum(:amount) / 100.0
+    scoped_expenses.monthly.sum(:amount) / 100.0
   end
 
   def total_for_month
-    user.expenses.where(date: date_range).sum(:amount) / 100.0
+    scoped_expenses.sum(:amount) / 100.0
   end
 
   def no_expenses_this_month?
@@ -54,6 +54,10 @@ class MonthlyExpenses
   end
 
   private
+
+  def scoped_expenses
+    user.expenses.where(date: date_range, disabled_at: nil)
+  end
 
   def distinct_monthly_expenses
     user.expenses.monthly.select("purpose, AVG(amount) as amount, MAX(date) as date").group("purpose")

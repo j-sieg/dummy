@@ -4,13 +4,18 @@ module Users
 
     def index
       new_expense = current_user.expenses.new
-      date_scoped_expenses = current_user.expenses.where(date: @date_viewed)
+      date_scoped_expenses = current_user.expenses.where(date: @date_viewed, disabled_at: nil)
 
-      obj = MonthlyExpenses.new(user: current_user, date: @date_viewed)
+      obj = ExpensesBreakdown.new(user: current_user, date: @date_viewed)
       obj.maybe_create_monthly_expenses
       dates_with_expenses = obj.dates_with_expenses
 
       render locals: {date_scoped_expenses:, new_expense:, dates_with_expenses:}
+    end
+
+    def show
+      expense = current_user.expenses.find(params[:id])
+      render locals: {expense: expense}
     end
 
     def create
@@ -37,9 +42,10 @@ module Users
 
     def destroy
       expense = current_user.expenses.find(params[:id])
-      expense.destroy!
+      result = ExpenseDestroyer.new.destroy(expense, params[:destroy_option])
+
       respond_to do |format|
-        format.turbo_stream { render locals: {expense: expense} }
+        format.turbo_stream { render locals: {expense: result.expense} }
         format.html { redirect_to expenses_url, notice: "Successfully delete the expense" }
       end
     end

@@ -1,0 +1,17 @@
+<%= turbo_frame_tag(dom_id(expense)) do %>
+  <article class="border border-dark p-2 mb-2">
+    <p class="p-0 m-0 mb-2">
+      Purpose: <%= expense.purpose %>
+      <br />
+      Amount: <%= number_to_pesos(expense.amount_from_cents) %>
+    </p>
+
+    <div class="d-flex">
+      <%= link_to "Cancel", expense_path(expense), class: "btn btn-sm btn-warning me-2" %>
+      <%= form_with(model: expense, url: expense_path(expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
+        <%= button_tag "Delete just this instance", type: "submit", name: "destroy_option", value: :this_instance, class: "btn btn-sm btn-secondary" %>
+        <%= button_tag "Delete all other instances", type: "submit", name: "destroy_option", value: :all_instances, class: "btn btn-sm btn-danger" %>
+      <% end %>
+    </div>
+  </article>
+<% end %>

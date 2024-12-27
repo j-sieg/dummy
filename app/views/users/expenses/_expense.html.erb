@@ -19,9 +19,7 @@
       <% if expense.recurring %>
         <%= link_to "Edit", edit_expense_path(expense), class: "btn btn-sm btn-secondary me-2" %>
       <% end %>
-      <%= form_with(model: expense, url: expense_path(expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
-        <%= form.submit "Delete", class: "btn btn-sm btn-danger" %>
-      <% end %>
+      <%= link_to "Delete", expense_destroy_path(expense), class: "btn btn-sm btn-danger" %>
     </div>
   </article>
 <% end %>
