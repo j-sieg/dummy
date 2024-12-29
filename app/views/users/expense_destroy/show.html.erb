@@ -9,8 +9,12 @@
     <div class="d-flex">
       <%= link_to "Cancel", expense_path(expense), class: "btn btn-sm btn-warning me-2" %>
       <%= form_with(model: expense, url: expense_path(expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
-        <%= button_tag "Delete just this instance", type: "submit", name: "destroy_option", value: :this_instance, class: "btn btn-sm btn-secondary" %>
-        <%= button_tag "Delete all other instances", type: "submit", name: "destroy_option", value: :all_instances, class: "btn btn-sm btn-danger" %>
+        <% if expense.recurring %>
+          <%= button_tag "Delete just this instance", type: "submit", name: "destroy_option", value: :this_instance, class: "btn btn-sm btn-secondary" %>
+          <%= button_tag "Delete all other instances", type: "submit", name: "destroy_option", value: :all_instances, class: "btn btn-sm btn-danger" %>
+        <% else %>
+          <%= button_tag "Delete", type: "submit", name: "destroy_option", value: :this_instance, class: "btn btn-sm btn-secondary" %>
+        <% end %>
       <% end %>
     </div>
   </article>

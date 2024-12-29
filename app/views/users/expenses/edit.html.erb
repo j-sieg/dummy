@@ -1,7 +1,7 @@
 <%= turbo_frame_tag dom_id(expense) do %>
-  <article class="border border-dark p-2 mb-2">
-    <p class="p-0 m-0">
-      Purpose: <%= expense.purpose %>
+  <article class="shadow-sm p-2 mb-2">
+    <p class="p-0 m-0 fw-light fst-italic">
+      <%= expense.purpose %>
     </p>
 
     <%= form_with(id: dom_id(expense, :edit), model: expense, method: :put, url: expense_path(expense), data: {turbo_frame: "navigation"}) do |form| %>
@@ -11,11 +11,16 @@
       </div>
     <% end %>
     <div class="d-flex">
+      <%= link_to "Cancel", expense_path(expense), class: "btn btn-sm btn-warning me-2" %>
       <%= button_tag(form: dom_id(expense, :edit), type: :submit, class: "btn btn-sm btn-secondary me-2") do %>
         Update
       <% end %>
-      <%= form_with(model: expense, url: expense_path(expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
-        <%= form.submit "Delete", class: "btn btn-sm btn-danger" %>
+      <% if expense.recurring %>
+        <%= link_to "Delete", expense_destroy_path(expense), class: "btn btn-sm btn-danger" %>
+      <% else %>
+        <%= form_with(model: expense, url: expense_path(expense), method: :delete, data: {turbo_confirm: "Are you sure?"}) do |form| %>
+          <%= button_tag "Delete", type: "submit", name: "destroy_option", value: :this_instance, class: "btn btn-sm btn-danger" %>
+        <% end %>
       <% end %>
     </div>
   </article>

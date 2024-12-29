@@ -29,12 +29,12 @@ module Users
     end
 
     def edit
-      expense = current_user.expenses.recurring.find(params[:id])
+      expense = current_user.expenses.find(params[:id])
       render locals: {expense: expense}
     end
 
     def update
-      expense = current_user.expenses.recurring.find(params[:id])
+      expense = current_user.expenses.find(params[:id])
 
       expense.update(update_params)
       render locals: {expense: expense}
